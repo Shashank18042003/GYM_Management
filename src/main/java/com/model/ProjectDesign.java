@@ -2,7 +2,7 @@ package com.model;
 
 public interface ProjectDesign {
 User login(String email,String password);
-void register();
+int register(User user);
 void update();
 void delete();
 void fetch();
