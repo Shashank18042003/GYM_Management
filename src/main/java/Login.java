@@ -1,24 +1,42 @@
 
 
+import java.io.IOException;
+
+import com.model.User;
+import com.model.UserDAO;
+
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import jakarta.servlet.http.HttpSession;
 
 public class Login extends HttpServlet {
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String email=request.getParameter("email");
+		String password=request.getParameter("password");
+		UserDAO ud=new UserDAO();
+		User user=ud.login(email,password); 
+		if(user!=null)
+		{
+			HttpSession hs=request.getSession();
+			hs.setAttribute("user", user);
+			if(email.equals("admin@gmail.com"))
+			{
+				response.sendRedirect("admindashboard.html");
+			}
+			else {
+		        response.sendRedirect("userdashboard.html");
+		    }
+		}
+		else {
+			response.sendRedirect("login.html");
+		}
 	}
+	
 
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
 
 }

@@ -1,7 +1,7 @@
 package com.model;
 
 public interface ProjectDesign {
-void login();
+User login(String email,String password);
 void register();
 void update();
 void delete();
