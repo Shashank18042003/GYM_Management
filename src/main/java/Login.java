@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.model.User;
 import com.model.UserDAO;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,13 +20,17 @@ public class Login extends HttpServlet {
 		String password=request.getParameter("password");
 		UserDAO ud=new UserDAO();
 		User user=ud.login(email,password); 
+		int totalCount=0;
+		totalCount=ud.userCount();
 		if(user!=null)
 		{
 			HttpSession hs=request.getSession();
 			hs.setAttribute("user", user);
 			if(email.equals("admin@gmail.com"))
 			{
-				response.sendRedirect("admindashboard.html");
+				 request.setAttribute("totalUers", totalCount);
+				  RequestDispatcher rd = request.getRequestDispatcher("admindashboard.jsp");
+				    rd.forward(request, response);
 			}
 			else {
 		        response.sendRedirect("userdashboard.html");
