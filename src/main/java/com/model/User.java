@@ -2,17 +2,11 @@ package com.model;
 
 
 public class User {
-    public int getId() {
-		return id;
+    public String getName() {
+		return Username;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String Username) {
+		this.Username = Username;
 	}
 	public String getEmail() {
 		return email;
@@ -20,7 +14,63 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int id;
-    public String name;
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public int getWeight() {
+		return weight;
+	}
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+	public int getHeight() {
+		return height;
+	}
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	public String getDoj() {
+		return doj;
+	}
+	public void setDoj(String doj) {
+		this.doj = doj;
+	}
+	public String Username;
     public String email;
+    public String password;
+    public int age;
+    public String gender;
+    public String phone;
+    public String address;
+    public int weight;
+    public int height;
+    public String doj;
+   
 }
