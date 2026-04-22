@@ -28,12 +28,16 @@ public class Login extends HttpServlet {
 			hs.setAttribute("user", user);
 			if(email.equals("admin@gmail.com"))
 			{
+<<<<<<< HEAD
 				 request.setAttribute("totalUers", totalCount);
 				  RequestDispatcher rd = request.getRequestDispatcher("admindashboard.jsp");
 				    rd.forward(request, response);
+=======
+				response.sendRedirect("admindashboard.jsp");
+>>>>>>> feature/frontend
 			}
 			else {
-		        response.sendRedirect("userdashboard.html");
+		        response.sendRedirect("userdashboard.jsp");
 		    }
 		}
 		else {
