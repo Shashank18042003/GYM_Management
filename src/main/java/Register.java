@@ -43,7 +43,7 @@ public class Register extends HttpServlet {
 		response.sendRedirect("sucessfulregister.html");
 	}
 	else {
-		response.sendRedirect("userexists");
+		response.sendRedirect("userexists.html");
 	}
 	
 	
