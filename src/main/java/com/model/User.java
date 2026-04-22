@@ -62,6 +62,13 @@ public class User {
 	public void setDoj(String doj) {
 		this.doj = doj;
 	}
+	int id;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String Username;
     public String email;
     public String password;

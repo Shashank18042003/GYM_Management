@@ -28,7 +28,7 @@
 
     <!-- Back Button -->
     <div class="d-flex justify-content-end mb-2">
-        <a href="admindashboard.jsp" class="btn btn-outline-secondary btn-sm">
+        <a href="Elements" class="btn btn-outline-secondary btn-sm">
             ← Back
         </a>
     </div>

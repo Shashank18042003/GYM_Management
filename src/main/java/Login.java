@@ -20,23 +20,14 @@ public class Login extends HttpServlet {
 		String password=request.getParameter("password");
 		UserDAO ud=new UserDAO();
 		User user=ud.login(email,password); 
-		int totalCount=0;
-		totalCount=ud.userCount();
 		if(user!=null)
 		{
 			HttpSession hs=request.getSession();
 			hs.setAttribute("user", user);
-			request.setAttribute("totalUsers", totalCount);
+			
 			if(email.equals("admin@gmail.com"))
 			{
-
-				
-
-
-				  RequestDispatcher rd = request.getRequestDispatcher("admindashboard.jsp");
-				    rd.forward(request, response);
-
-				response.sendRedirect("admindashboard.jsp");
+				response.sendRedirect("Elements");
 			}
 			else {
 		        response.sendRedirect("userdashboard.jsp");

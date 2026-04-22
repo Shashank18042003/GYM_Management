@@ -2,10 +2,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Vector;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.model.User;
 import com.model.UserDAO;
@@ -16,6 +16,7 @@ public class Fetch extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/html");
+        int id=0;
 
         PrintWriter out = response.getWriter();
 
@@ -50,6 +51,7 @@ public class Fetch extends HttpServlet {
         out.println("<th>Weight</th>");
         out.println("<th>Height</th>");
         out.println("<th>Date of Joining</th>");
+        out.println("<th>Actions</th>");
         out.println("</tr>");
         out.println("</thead>");
 
@@ -70,6 +72,22 @@ public class Fetch extends HttpServlet {
             out.println("<td>" + hs.getWeight() + "</td>");
             out.println("<td>" + hs.getHeight() + "</td>");
             out.println("<td>" + hs.getDoj() + "</td>");
+            
+            out.println("<td>");
+
+         // Delete Button
+         out.println("<form action='Delete' method='post' style='display:inline;'>");
+         out.println("<input type='hidden' name='email' value='" + hs.getEmail() + "'>");
+         out.println("<button class='btn btn-danger btn-sm'>Delete</button>");
+         out.println("</form>");
+
+         // Update Button
+         out.println("<form action='Update' method='get' style='display:inline;margin-left:10px;'>");
+         out.println("<input type='hidden' name='email' value='" + hs.getEmail() + "'>");
+         out.println("<button class='btn btn-primary btn-sm'>Update</button>");
+         out.println("</form>");
+
+         out.println("</td>");
 
             out.println("</tr>");
         }
@@ -78,7 +96,7 @@ public class Fetch extends HttpServlet {
         out.println("</table>");
 
         out.println("<div class='text-center mt-3'>");
-        out.println("<a href='Login' class='btn btn-secondary'>Back</a>");
+        out.println("<a href='Elements' class='btn btn-secondary'>Back</a>");
         out.println("</div>");
 
         out.println("</div>");

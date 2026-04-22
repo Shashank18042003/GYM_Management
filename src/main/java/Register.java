@@ -2,13 +2,13 @@
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.model.User;
 import com.model.UserDAO;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 public class Register extends HttpServlet {
 
@@ -25,7 +25,7 @@ public class Register extends HttpServlet {
 	String doj=request.getParameter("doj");
 	
 	User user=new User();
-	user.setName(username);
+	user.setUsername(username);
 	user.setEmail(email);
 	user.setPassword(password);
 	user.setAge(age);

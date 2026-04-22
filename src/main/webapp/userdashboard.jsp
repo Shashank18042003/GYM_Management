@@ -7,6 +7,8 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         body {
@@ -52,11 +54,15 @@
 
             <h4 class="text-center mb-4">User Panel</h4>
 
-            <a href="#">My Profile</a>
-            <a href="#">Membership</a>
-            <a href="#">Recharge Plan</a>
-            <a href="#">Payment History</a>
-            <a href="login.jsp">Logout</a>
+            <a href="#"><i class="bi bi-person-circle"></i> My Profile</a>
+
+			<a href="#"><i class="bi bi-card-checklist"></i> Membership</a>
+
+			<a href="#"><i class="bi bi-credit-card"></i> Recharge Plan</a>
+
+			<a href="#"><i class="bi bi-clock-history"></i> Payment History</a>
+
+			<a href="login.html"><i class="bi bi-box-arrow-right"></i> Logout</a>
 
         </div>
 
