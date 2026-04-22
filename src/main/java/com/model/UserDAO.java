@@ -85,7 +85,7 @@ public class UserDAO implements ProjectDesign{
 		JdbcRowSet jrs=MyrowSet.Myrowset();
 		try {
 			
-			jrs.setCommand("select count(email) from users where email!=? ");
+			jrs.setCommand("select count(email) from gym_users where email!=? ");
 			jrs.setString(1, "admin@gmail.com");
 			jrs.execute();
 			if(jrs.next())

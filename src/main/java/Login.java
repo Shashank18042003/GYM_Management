@@ -22,18 +22,19 @@ public class Login extends HttpServlet {
 		User user=ud.login(email,password); 
 		int totalCount=0;
 		totalCount=ud.userCount();
+		
 		if(user!=null)
 		{
 			HttpSession hs=request.getSession();
 			hs.setAttribute("user", user);
 			if(email.equals("admin@gmail.com"))
 			{
-				 request.setAttribute("totalUers", totalCount);
+				 request.setAttribute("totalUsers", totalCount);
 				  RequestDispatcher rd = request.getRequestDispatcher("admindashboard.jsp");
 				    rd.forward(request, response);
 			}
 			else {
-		        response.sendRedirect("userdashboard.html");
+		        response.sendRedirect("userdashboard.jsp");
 		    }
 		}
 		else {
