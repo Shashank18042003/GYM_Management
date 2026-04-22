@@ -2,10 +2,10 @@ package com.model;
 
 
 public class User {
-    public String getName() {
+    public String getUsername() {
 		return Username;
 	}
-	public void setName(String Username) {
+	public void setUsername(String Username) {
 		this.Username = Username;
 	}
 	public String getEmail() {
