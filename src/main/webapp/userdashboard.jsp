@@ -56,14 +56,14 @@
             <a href="#">Membership</a>
             <a href="#">Recharge Plan</a>
             <a href="#">Payment History</a>
-            <a href="login.jsp">Logout</a>
+            <a href="login.html">Logout</a>
 
         </div>
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 content">
 
-            <h2>Welcome ${username} 👋</h2>
+            <h2>Welcome ${sessionScope.user.getUsername()} </h2>
             <p class="text-muted">Here is your gym overview</p>
 
             <div class="row mt-4">
@@ -97,9 +97,9 @@
             <!-- Profile Section -->
             <div class="card shadow p-4 mt-4">
                 <h5>My Details</h5>
-                <p><strong>Name:</strong> ${username}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Name:</strong> ${sessionScope.user.getUsername()}</p>
+                <p><strong>Email:</strong> ${sessionScope.email}</p>
+                <p><strong>Phone:</strong> ${sessionScope.user.getPhone()}</p>
             </div>
 
         </div>

@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 
 import com.model.User;
@@ -20,18 +18,26 @@ public class Login extends HttpServlet {
 		String password=request.getParameter("password");
 		UserDAO ud=new UserDAO();
 		User user=ud.login(email,password); 
+
 		int totalCount=0;
 		totalCount=ud.userCount();
+
+		HttpSession hs=request.getSession();
+		
+
 		if(user!=null)
 		{
-			HttpSession hs=request.getSession();
-			hs.setAttribute("user", user);
-			request.setAttribute("totalUsers", totalCount);
+			 hs.setAttribute("email",email);
+			 hs.setAttribute("logged_in", true);
+			 hs.setAttribute("user", user);
 			if(email.equals("admin@gmail.com"))
 			{
 
 
-				  RequestDispatcher rd = request.getRequestDispatcher("admindashboard.jsp");
+
+				
+				  RequestDispatcher rd = request.getRequestDispatcher("Admindashboard");
+
 				    rd.forward(request, response);
 
 			

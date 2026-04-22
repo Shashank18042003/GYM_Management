@@ -33,4 +33,12 @@
   <servlet-name>Fetch</servlet-name>
   <url-pattern>/Fetch</url-pattern>
   </servlet-mapping>
+   <servlet>
+  <servlet-name>Admindashboard</servlet-name>
+  <servlet-class>Admindashboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  <servlet-name>Admindashboard</servlet-name>
+  <url-pattern>/Admindashboard</url-pattern>
+  </servlet-mapping>
 </web-app>
