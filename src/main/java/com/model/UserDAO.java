@@ -5,14 +5,15 @@ import java.sql.PreparedStatement;
 
 import javax.sql.rowset.JdbcRowSet;
 
-import com.myjars.MyConnection;
-import com.myjars.MyJdbcRowSet;
+import com.DBconnection.Myjdbc;
+import com.DBconnection.MyrowSet;
+
 
 public class UserDAO implements ProjectDesign{
 
 	@Override
 	public User login(String email,String password) {
-		JdbcRowSet jrs=MyJdbcRowSet.MyJdbcRowSet();
+		JdbcRowSet jrs=MyrowSet.Myrowset();
 		try {
 			if(email.equals("admin@gmail.com"))
 			jrs.setCommand("select * from gym_users where email=? and password=?");
@@ -38,7 +39,7 @@ public class UserDAO implements ProjectDesign{
 	@Override
 	public int register(User user) {
 		int r=0;
-		Connection connection=MyConnection.connect();
+		Connection connection=Myjdbc.myconn();
 		try {
 			
 			PreparedStatement preparedStatement=connection.prepareStatement("insert into gym_users (Username, email, password, age, gender, phone, address, weight, height, doj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
