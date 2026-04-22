@@ -15,7 +15,6 @@ public class UserDAO implements ProjectDesign{
 	public User login(String email,String password) {
 		JdbcRowSet jrs=MyrowSet.Myrowset();
 		try {
-			if(email.equals("admin@gmail.com"))
 			jrs.setCommand("select * from gym_users where email=? and password=?");
 			jrs.setString(1, email);
 			jrs.setString(2,password);

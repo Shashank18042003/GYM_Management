@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,14 +26,24 @@
 
 <div class="card shadow p-4 form-card">
 
-    <!-- 🔹 Back Button -->
+    <!-- Back Button -->
     <div class="d-flex justify-content-end mb-2">
-        <a href="admindashboard.html" class="btn btn-outline-secondary btn-sm">
+        <a href="admindashboard.jsp" class="btn btn-outline-secondary btn-sm">
             ← Back
         </a>
     </div>
 
     <h3 class="text-center mb-4">User Registration</h3>
+
+    <!-- OPTIONAL: success message -->
+    <%
+        String msg = (String) request.getAttribute("msg");
+        if(msg != null){
+    %>
+        <div class="alert alert-success"><%= msg %></div>
+    <%
+        }
+    %>
 
     <form action="Register" method="post">
 

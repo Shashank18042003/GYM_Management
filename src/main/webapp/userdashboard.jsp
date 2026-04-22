@@ -1,21 +1,18 @@
+<%@ page language="java" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>User Dashboard</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         body {
             margin: 0;
         }
 
-        /* Sidebar */
         .sidebar {
             height: 100vh;
             background-color: #212529;
@@ -35,7 +32,6 @@
             color: white;
         }
 
-        /* Main Content */
         .content {
             padding: 20px;
         }
@@ -51,50 +47,59 @@
 <div class="container-fluid">
     <div class="row">
 
-        <!-- 🔹 Sidebar -->
+        <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 sidebar">
 
-            <h4 class="text-center mb-4">Admin Panel</h4>
+            <h4 class="text-center mb-4">User Panel</h4>
 
-            <a href="userregister.html"><i class="bi bi-person-plus"></i> User Register</a>
-            <a href="#"><i class="bi bi-people"></i> User Details</a>
-            <a href="#"><i class="bi bi-calendar-event"></i> Add Events</a>
-            <a href="login.html"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            <a href="#">My Profile</a>
+            <a href="#">Membership</a>
+            <a href="#">Recharge Plan</a>
+            <a href="#">Payment History</a>
+            <a href="login.jsp">Logout</a>
 
         </div>
 
-        <!-- 🔹 Main Content -->
+        <!-- Main Content -->
         <div class="col-md-9 col-lg-10 content">
 
-            <h2>Welcome Admin 👋</h2>
-            <p class="text-muted">Manage your gym system here</p>
+            <h2>Welcome ${username} 👋</h2>
+            <p class="text-muted">Here is your gym overview</p>
 
             <div class="row mt-4">
 
-                <!-- Card 1 -->
+                <!-- Membership Status -->
                 <div class="col-md-4">
                     <div class="card shadow p-3 card-box">
-                        <h5>Total Users</h5>
-                        <h3>120</h3>
+                        <h5>Membership Status</h5>
+                        <h4 class="text-success">${status}</h4>
                     </div>
                 </div>
 
-                <!-- Card 2 -->
+                <!-- Expiry Date -->
                 <div class="col-md-4">
                     <div class="card shadow p-3 card-box">
-                        <h5>Active Members</h5>
-                        <h3>85</h3>
+                        <h5>Expiry Date</h5>
+                        <h4>${expiryDate}</h4>
                     </div>
                 </div>
 
-                <!-- Card 3 -->
+                <!-- Remaining Days -->
                 <div class="col-md-4">
                     <div class="card shadow p-3 card-box">
-                        <h5>Events</h5>
-                        <h3>5</h3>
+                        <h5>Remaining Days</h5>
+                        <h4>${remainingDays} Days</h4>
                     </div>
                 </div>
 
+            </div>
+
+            <!-- Profile Section -->
+            <div class="card shadow p-4 mt-4">
+                <h5>My Details</h5>
+                <p><strong>Name:</strong> ${username}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
             </div>
 
         </div>
