@@ -26,15 +26,15 @@ public class Login extends HttpServlet {
 		{
 			HttpSession hs=request.getSession();
 			hs.setAttribute("user", user);
+			request.setAttribute("totalUsers", totalCount);
 			if(email.equals("admin@gmail.com"))
 			{
-<<<<<<< HEAD
-				 request.setAttribute("totalUers", totalCount);
+
+
 				  RequestDispatcher rd = request.getRequestDispatcher("admindashboard.jsp");
 				    rd.forward(request, response);
-=======
-				response.sendRedirect("admindashboard.jsp");
->>>>>>> feature/frontend
+
+			
 			}
 			else {
 		        response.sendRedirect("userdashboard.jsp");
