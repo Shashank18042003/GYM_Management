@@ -6,5 +6,5 @@ void register();
 void update();
 void delete();
 void fetch();
-
+int userCount();
 }

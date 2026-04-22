@@ -20,6 +20,7 @@ public class UserDAO implements ProjectDesign{
 				User u=new User();
 				u.setId(jrs.getInt("id"));
 				u.setEmail(jrs.getString("email"));
+				u.setName(jrs.getString("username"));
 				return u;
 			}
 		}
@@ -52,6 +53,26 @@ public class UserDAO implements ProjectDesign{
 	public void fetch() {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public int userCount() {
+		 int count = 0;
+		JdbcRowSet jrs=MyrowSet.Myrowset();
+		try {
+			
+			jrs.setCommand("select count(email) from users where email!=? ");
+			jrs.setString(1, "admin@gmail.com");
+			jrs.execute();
+			if(jrs.next())
+			{
+				 count = jrs.getInt(1);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 }
