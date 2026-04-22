@@ -24,8 +24,10 @@ public class UserDAO implements ProjectDesign{
 			{
 				User u=new User();
 				//u.setId(jrs.getInt("id"));
-				u.setEmail(jrs.getString("email"));
+				
 				u.setUsername(jrs.getString("username"));
+				u.setPhone(jrs.getString("phone"));
+
 				return u;
 			}
 		}
@@ -83,6 +85,7 @@ public class UserDAO implements ProjectDesign{
 		try {
 			
 			jrs.setCommand("select * from gym_users");
+			
 			jrs.execute();
 			for(;jrs.next();)
 			{
@@ -128,6 +131,12 @@ public class UserDAO implements ProjectDesign{
 			e.printStackTrace();
 		}
 		return count;
+	}
+
+	@Override
+	public User getUserById(int userId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

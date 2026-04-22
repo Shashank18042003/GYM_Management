@@ -9,4 +9,5 @@ void update();
 void delete();
 Vector<User> fetch();
 int userCount();
+User getUserById(int userId);
 }
