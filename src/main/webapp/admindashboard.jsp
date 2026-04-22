@@ -57,7 +57,7 @@
             <h4 class="text-center mb-4">Admin Panel</h4>
 
             <a href="userregister.jsp"><i class="bi bi-person-plus"></i> User Register</a>
-            <a href="#"><i class="bi bi-people"></i> User Details</a>
+            <a href="Fetch"><i class="bi bi-people"></i> User Details</a>
             <a href="#"><i class="bi bi-calendar-event"></i> Add Events</a>
             <a href="login.html"><i class="bi bi-box-arrow-right"></i> Logout</a>
 

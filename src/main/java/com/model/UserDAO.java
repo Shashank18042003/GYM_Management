@@ -2,6 +2,7 @@ package com.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Vector;
 
 import javax.sql.rowset.JdbcRowSet;
 import com.myjars.MyConnection;
@@ -23,7 +24,7 @@ public class UserDAO implements ProjectDesign{
 				User u=new User();
 				//u.setId(jrs.getInt("id"));
 				u.setEmail(jrs.getString("email"));
-				u.setName(jrs.getString("username"));
+				u.setUsername(jrs.getString("username"));
 				return u;
 			}
 		}
@@ -41,7 +42,7 @@ public class UserDAO implements ProjectDesign{
 		try {
 			
 			PreparedStatement preparedStatement=connection.prepareStatement("insert into gym_users (Username, email, password, age, gender, phone, address, weight, height, doj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			preparedStatement.setString(1,user.getName() );
+			preparedStatement.setString(1,user.getUsername() );
 			preparedStatement.setString(2,user.getEmail() );
 			preparedStatement.setString(3,user.getPassword() );
 			preparedStatement.setInt(4,user.getAge() );
@@ -74,8 +75,37 @@ public class UserDAO implements ProjectDesign{
 	}
 
 	@Override
-	public void fetch() {
+	public Vector<User> fetch() {
 		// TODO Auto-generated method stub
+		JdbcRowSet jrs=MyrowSet.Myrowset();
+		Vector vector=new Vector();
+		try {
+			
+			jrs.setCommand("select * from gym_users");
+			jrs.execute();
+			for(;jrs.next();)
+			{
+				User u=new User();
+				//u.setId(jrs.getInt("id"));
+				u.setUsername(jrs.getString("username"));
+				u.setEmail(jrs.getString("email"));
+				u.setPassword(jrs.getString("password"));
+				u.setAge(jrs.getInt("age"));
+				u.setGender(jrs.getString("gender"));
+				u.setPhone(jrs.getString("phone"));
+				u.setAddress(jrs.getString("address"));
+				u.setWeight(jrs.getInt("weight"));
+				u.setHeight(jrs.getInt("height"));
+				u.setDoj(jrs.getString("doj"));
+				vector.add(u);
+				
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return vector;
 		
 	}
 	@Override
