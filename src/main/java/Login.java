@@ -25,10 +25,10 @@ public class Login extends HttpServlet {
 			hs.setAttribute("user", user);
 			if(email.equals("admin@gmail.com"))
 			{
-				response.sendRedirect("admindashboard.html");
+				response.sendRedirect("admindashboard.jsp");
 			}
 			else {
-		        response.sendRedirect("userdashboard.html");
+		        response.sendRedirect("userdashboard.jsp");
 		    }
 		}
 		else {
