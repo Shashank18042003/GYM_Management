@@ -17,11 +17,6 @@
             scrollbar-width: none;     /* Firefox */
         }
         body::-webkit-scrollbar { width: 0; height: 0; } /* Chrome/Safari */
-        * {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        *::-webkit-scrollbar { width: 0; height: 0; }
         .page-wrap {
             max-width: 980px;
             margin: 18px auto;
