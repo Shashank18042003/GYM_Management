@@ -1,161 +1,82 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Recharge Plans</title>
 
-<!-- Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h4 class="mb-0 fw-bold">Choose Your Plan</h4>
+    <span class="badge bg-primary-subtle text-primary">Recharge</span>
+</div>
+
+<!-- FILTER -->
+<div class="mb-3 d-flex flex-wrap gap-2">
+    <button class="btn btn-outline-primary btn-sm" onclick="filter('all')">All</button>
+    <button class="btn btn-outline-secondary btn-sm" onclick="filter('monthly')">Monthly</button>
+    <button class="btn btn-outline-secondary btn-sm" onclick="filter('quarterly')">Quarterly</button>
+    <button class="btn btn-outline-secondary btn-sm" onclick="filter('half')">Half-Year</button>
+    <button class="btn btn-outline-secondary btn-sm" onclick="filter('annual')">Annual</button>
+</div>
+
+<div class="row g-4">
+
+    <!-- MONTHLY -->
+    <div class="col-md-4 plan monthly">
+        <div class="plan-card">
+            <h6>Monthly</h6>
+            <div class="price text-warning">₹1500</div>
+            <p>30 Days</p>
+            <button class="btn btn-warning w-100 buy-btn" onclick="pay(1500)">Buy</button>
+        </div>
+    </div>
+
+    <!-- QUARTERLY (POPULAR) -->
+    <div class="col-md-4 plan quarterly">
+        <div class="plan-card plan-popular">
+            <div class="tag">Best Value</div>
+            <h6>Quarterly</h6>
+            <div class="price text-primary">₹4000</div>
+            <p>90 Days</p>
+            <button class="btn btn-primary w-100 buy-btn" onclick="pay(4000)">Buy</button>
+        </div>
+    </div>
+
+    <!-- HALF -->
+    <div class="col-md-4 plan half">
+        <div class="plan-card">
+            <h6>Half-Year</h6>
+            <div class="price text-info">₹7500</div>
+            <p>180 Days</p>
+            <button class="btn btn-info w-100 buy-btn" onclick="pay(7500)">Buy</button>
+        </div>
+    </div>
+
+    <!-- ANNUAL -->
+    <div class="col-md-4 plan annual">
+        <div class="plan-card">
+            <h6>Annual</h6>
+            <div class="price text-success">₹10000</div>
+            <p>365 Days</p>
+            <button class="btn btn-success w-100 buy-btn" onclick="pay(10000)">Buy</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- FILTER SCRIPT -->
+<script>
+function filter(type){
+    let plans = document.querySelectorAll(".plan");
+
+    plans.forEach(p => {
+        if(type === "all" || p.classList.contains(type)){
+            p.style.display = "block";
+        } else {
+            p.style.display = "none";
+        }
+    });
+}
+</script>
 
 <!-- Razorpay -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<style>
-body {
-    background-color: #f1f3f6;
-}
-
-/* Sidebar */
-.sidebar {
-    background: #e9ecef;
-    height: 100vh;
-    padding: 20px;
-}
-
-.sidebar a {
-    display: block;
-    padding: 10px;
-    color: #333;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-.sidebar a:hover, .sidebar a.active {
-    background: #dcdfe3;
-}
-
-/* Plan cards */
-.plan-card {
-    border-radius: 15px;
-    padding: 20px;
-    background: #fff;
-    transition: 0.3s;
-}
-
-.plan-card:hover {
-    transform: scale(1.03);
-}
-
-.price {
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.buy-btn {
-    border-radius: 25px;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container-fluid">
-<div class="row">
-
-    <!-- 🔹 Sidebar -->
-    <div class="col-md-3 col-lg-2 sidebar">
-        <h5>Plan Category</h5>
-
-        <a href="#" class="active" onclick="filterPlans('all', this)">All Plans</a>
-        <a href="#" onclick="filterPlans('monthly', this)">Monthly Plans</a>
-        <a href="#" onclick="filterPlans('quarterly', this)">Quarterly Plans</a>
-        <a href="#" onclick="filterPlans('half', this)">Half-Year Plans</a>
-        <a href="#" onclick="filterPlans('annual', this)">Annual Plans</a>
-    </div>
-
-    <!-- 🔹 Main Content -->
-    <div class="col-md-9 col-lg-10 p-4">
-
-        <h4 class="mb-4">Top Gym Membership Plans</h4>
-
-        <div class="row g-4">
-
-            <!-- Monthly -->
-            <div class="col-md-4 plan monthly">
-                <div class="plan-card shadow">
-                    <h6>Monthly Plan</h6>
-                    <div class="price">₹1500</div>
-                    <p>Validity: <b>30 Days</b></p>
-                    <button class="btn btn-warning w-100 buy-btn" onclick="pay(1500)">Buy</button>
-                </div>
-            </div>
-
-            <!-- Quarterly -->
-            <div class="col-md-4 plan quarterly">
-                <div class="plan-card shadow">
-                    <h6>Quarterly Plan</h6>
-                    <div class="price">₹4000</div>
-                    <p>Validity: <b>90 Days</b></p>
-                    <button class="btn btn-primary w-100 buy-btn" onclick="pay(4000)">Buy</button>
-                </div>
-            </div>
-
-            <!-- Half-Year -->
-            <div class="col-md-4 plan half">
-                <div class="plan-card shadow">
-                    <h6>Half-Year Plan</h6>
-                    <div class="price">₹7500</div>
-                    <p>Validity: <b>180 Days</b></p>
-                    <button class="btn btn-primary w-100 buy-btn" onclick="pay(7500)">Buy</button>
-                </div>
-            </div>
-
-            <!-- Annual -->
-            <div class="col-md-4 plan annual">
-                <div class="plan-card shadow">
-                    <h6>Annual Plan</h6>
-                    <div class="price">₹10000</div>
-                    <p>Validity: <b>365 Days</b></p>
-                    <button class="btn btn-success w-100 buy-btn" onclick="pay(10000)">Buy</button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-</div>
-
-<!-- 🔥 Filter Logic -->
-<script>
-function filterPlans(type, element) {
-
-    let plans = document.querySelectorAll(".plan");
-
-    plans.forEach(plan => {
-        if (type === "all") {
-            plan.style.display = "block";
-        } else if (plan.classList.contains(type)) {
-            plan.style.display = "block";
-        } else {
-            plan.style.display = "none";
-        }
-    });
-
-    // Highlight active menu
-    document.querySelectorAll(".sidebar a").forEach(link => {
-        link.classList.remove("active");
-    });
-
-    element.classList.add("active");
-}
-</script>
-
-<!-- 🔥 Razorpay -->
 <script>
 function pay(amount) {
 
@@ -164,15 +85,14 @@ function pay(amount) {
     .then(data => {
 
         var options = {
-            "key": "YOUR_KEY_ID",
-            "amount": data.amount,
-            "currency": "INR",
-            "name": "Gym System",
-            "description": "Membership Recharge",
-            "order_id": data.id,
+            key: "YOUR_KEY_ID",
+            amount: data.amount,
+            currency: "INR",
+            name: "Gym System",
+            description: "Membership",
+            order_id: data.id,
 
-            "handler": function (response) {
-
+            handler: function (response) {
                 fetch("VerifyPayment", {
                     method: "POST",
                     headers: {
@@ -184,16 +104,12 @@ function pay(amount) {
                         "&signature=" + response.razorpay_signature
                 });
 
-                alert("Payment Successful ✅");
-                window.location.href = "userdashboard.jsp";
+                alert("Payment Successful");
+                location.reload();
             }
         };
 
-        var rzp = new Razorpay(options);
-        rzp.open();
+        new Razorpay(options).open();
     });
 }
 </script>
-
-</body>
-</html>

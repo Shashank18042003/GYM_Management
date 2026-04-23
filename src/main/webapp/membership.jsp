@@ -1,49 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="com.model.MembershipDAO, com.model.Membership" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Membership</title>
-
-<style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: white;
-}
-
-.member-box {
-    background: rgba(255,255,255,0.05);
-    padding: 20px;
-    border-radius: 12px;
-    margin-top: 20px;
-}
-
-.member-box p {
-    margin: 8px 0;
-    font-size: 15px;
-}
-
-.active {
-    color: #22c55e;
-    font-weight: bold;
-}
-
-.expired {
-    color: #ef4444;
-    font-weight: bold;
-}
-</style>
-
-</head>
-
-<body>
-
-<div style="max-width:600px; margin:40px auto;">
-
 <%
 String email = (String) session.getAttribute("email");
 
@@ -54,20 +11,26 @@ if(email != null){
     m = dao.getMembershipByEmail(email);
 }
 
-String status = "No Membership";
+String status = "NO PLAN";
 long days = 0;
+long totalDays = 30; // default
 
 if(m != null){
 
     java.time.LocalDate today = java.time.LocalDate.now();
 
-    // Fix for DATETIME (important)
     String rawDate = m.getEnd_date();
     String cleanDate = rawDate.split(" ")[0];
 
     java.time.LocalDate end = java.time.LocalDate.parse(cleanDate);
 
+    String rawStart = m.getStart_date();
+    String cleanStart = rawStart.split(" ")[0];
+
+    java.time.LocalDate start = java.time.LocalDate.parse(cleanStart);
+
     days = java.time.temporal.ChronoUnit.DAYS.between(today, end);
+    totalDays = java.time.temporal.ChronoUnit.DAYS.between(start, end);
 
     if(days >= 0){
         status = "ACTIVE";
@@ -75,32 +38,83 @@ if(m != null){
         status = "EXPIRED";
     }
 }
+
+int percent = 0;
+if(totalDays > 0 && days > 0){
+    percent = (int)((days * 100) / totalDays);
+}
 %>
 
-<h3>Membership Details</h3>
-
-<div class="member-box">
-
-<p><strong>Plan:</strong> <%= (m != null) ? m.getPlan_name() : "-" %></p>
-
-<p>
-<strong>Status:</strong> 
-<span class="<%= status.equals("ACTIVE") ? "active" : "expired" %>">
-    <%= status %>
-</span>
-</p>
-
-<p><strong>Start Date:</strong> <%= (m != null) ? m.getStart_date() : "-" %></p>
-
-<p><strong>Expiry Date:</strong> <%= (m != null) ? m.getEnd_date() : "-" %></p>
-
-<p><strong>Remaining Days:</strong> 
-<%= (m != null && days >= 0) ? days : 0 %>
-</p>
-
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h4 class="fw-bold mb-0">Your Membership</h4>
+    <span class="badge bg-primary-subtle text-primary">Status</span>
 </div>
 
-</div>
+<!-- CARD -->
+<div class="card-box">
 
-</body>
-</html>
+    <!-- STATUS -->
+    <div class="text-center mb-4">
+        <h6 class="text-muted">Status</h6>
+
+        <h2 class="<%= status.equals("ACTIVE") ? "text-success" : "text-danger" %> fw-bold">
+            <%= status %>
+        </h2>
+
+        <% if(days >= 0){ %>
+            <span class="badge bg-warning-subtle text-dark mt-2">
+                <%= days %> days remaining
+            </span>
+        <% } %>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <% if(m != null && days > 0){ %>
+    <div class="mb-4">
+        <h6 class="text-muted">Membership Progress</h6>
+
+        <div class="progress mt-2">
+            <div class="progress-bar bg-success" style="width: <%= percent %>%;">
+                <%= percent %>%
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- DETAILS -->
+    <div class="row text-center">
+
+        <div class="col-md-4">
+            <p class="text-muted mb-1">Plan</p>
+            <strong><%= (m != null) ? m.getPlan_name() : "-" %></strong>
+        </div>
+
+        <div class="col-md-4">
+            <p class="text-muted mb-1">Start</p>
+            <strong><%= (m != null) ? m.getStart_date() : "-" %></strong>
+        </div>
+
+        <div class="col-md-4">
+            <p class="text-muted mb-1">Expiry</p>
+            <strong><%= (m != null) ? m.getEnd_date() : "-" %></strong>
+        </div>
+
+    </div>
+
+    <!-- ACTION -->
+    <div class="text-center mt-4">
+
+        <% if(status.equals("ACTIVE")){ %>
+            <a href="userdashboard.jsp?page=rechargeplan.jsp" class="btn btn-primary px-4">
+                Renew Membership
+            </a>
+        <% } else { %>
+            <a href="RenewPlan" class="btn btn-danger px-4">
+                Activate Plan
+            </a>
+        <% } %>
+
+    </div>
+
+</div>

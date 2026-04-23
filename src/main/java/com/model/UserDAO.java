@@ -25,6 +25,7 @@ public class UserDAO implements ProjectDesign{
 				User u=new User();
 				u.setId(jrs.getInt("id"));
 				u.setUsername(jrs.getString("username"));
+				u.setEmail(jrs.getString("email"));
 				u.setPhone(jrs.getString("phone"));
 
 				return u;
@@ -77,38 +78,94 @@ public class UserDAO implements ProjectDesign{
 	}
 
 	@Override
-	public Vector<User> fetch() {
-		// TODO Auto-generated method stub
-		JdbcRowSet jrs=MyrowSet.Myrowset();
-		Vector vector=new Vector();
+	public Vector<AdminUserRow> fetch() {
+		JdbcRowSet jrs = MyrowSet.Myrowset();
+		Vector<AdminUserRow> rows = new Vector<>();
+
 		try {
 			
-			jrs.setCommand("select * from gym_users where email!=?");
-			jrs.setString(1,"admin@gmail.com");
+			jrs.setCommand(
+				"SELECT " +
+				"  u.id AS user_id, u.username, u.email, u.phone, " +
+				"  m.plan_name, m.start_date, m.end_date " +
+				"FROM gym_users u " +
+				"LEFT JOIN (" +
+				"  SELECT mm.user_id, mm.plan_name, mm.start_date, mm.end_date " +
+				"  FROM membership mm " +
+				"  INNER JOIN (" +
+				"    SELECT user_id, MAX(end_date) AS max_end " +
+				"    FROM membership " +
+				"    GROUP BY user_id" +
+				"  ) latest ON latest.user_id = mm.user_id AND latest.max_end = mm.end_date" +
+				") m ON m.user_id = u.id " +
+				"WHERE u.email <> ? " +
+				"ORDER BY u.id DESC"
+			);
+			jrs.setString(1, "admin@gmail.com");
 			jrs.execute();
-			for(;jrs.next();)
-			{
-				User u=new User();
-				//u.setId(jrs.getInt("id"));
-				u.setUsername(jrs.getString("username"));
-				u.setEmail(jrs.getString("email"));
-				u.setPassword(jrs.getString("password"));
-				u.setAge(jrs.getInt("age"));
-				u.setGender(jrs.getString("gender"));
-				u.setPhone(jrs.getString("phone"));
-				u.setAddress(jrs.getString("address"));
-				u.setWeight(jrs.getInt("weight"));
-				u.setHeight(jrs.getInt("height"));
-				u.setDoj(jrs.getString("doj"));
-				vector.add(u);
-				
+
+			while (jrs.next()) {
+				AdminUserRow r = new AdminUserRow();
+				r.setUserId(jrs.getInt("user_id"));
+				r.setUsername(jrs.getString("username"));
+				r.setEmail(jrs.getString("email"));
+				r.setPhone(jrs.getString("phone"));
+				r.setPlanName(jrs.getString("plan_name"));     // null => NO PLAN
+				r.setStartDate(jrs.getString("start_date"));
+				r.setEndDate(jrs.getString("end_date"));
+
+				// Compute status + days left for admin display
+				String endRaw = r.getEndDate();
+				if (endRaw == null || endRaw.isBlank()) {
+					r.setMembershipStatus("NO PLAN");
+					r.setDaysLeft(0);
+				} else {
+					String endClean = endRaw.split(" ")[0]; // handles "YYYY-MM-DD HH:mm:ss"
+					java.time.LocalDate end = java.time.LocalDate.parse(endClean);
+					long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDate.now(), end);
+
+					r.setDaysLeft((int) daysLeft);
+					r.setMembershipStatus(daysLeft >= 0 ? "ACTIVE" : "EXPIRED");
+				}
+
+				rows.add(r);
 			}
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return vector;
+
+		// Fallback: if join fails / returns nothing, still show users (NO PLAN)
+		if (rows.isEmpty()) {
+			try {
+				jrs = MyrowSet.Myrowset();
+				jrs.setCommand(
+					"SELECT id AS user_id, username, email, phone " +
+					"FROM gym_users " +
+					"WHERE email <> ? " +
+					"ORDER BY id DESC"
+				);
+				jrs.setString(1, "admin@gmail.com");
+				jrs.execute();
+
+				while (jrs.next()) {
+					AdminUserRow r = new AdminUserRow();
+					r.setUserId(jrs.getInt("user_id"));
+					r.setUsername(jrs.getString("username"));
+					r.setEmail(jrs.getString("email"));
+					r.setPhone(jrs.getString("phone"));
+					r.setPlanName(null);
+					r.setStartDate(null);
+					r.setEndDate(null);
+					r.setMembershipStatus("NO PLAN");
+					r.setDaysLeft(0);
+					rows.add(r);
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+
+		return rows;
 		
 	}
 

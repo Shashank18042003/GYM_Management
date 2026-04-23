@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.Vector, com.model.User" %>
+<%@ page import="java.util.Vector, com.model.AdminUserRow" %>
 
 <div class="container">
 
@@ -12,21 +12,21 @@
     <th>Email</th>
     <th>Phone</th>
 
-    <th>Plan</th>        <!-- 🔥 NEW -->
-    <th>Start Date</th>  <!-- 🔥 NEW -->
-    <th>End Date</th>    <!-- 🔥 NEW -->
+    <th>Plan</th>
+    <th>Start Date</th>
+    <th>End Date</th>
 
     <th>Status</th>
-    <th>Last Payment</th> <!-- 🔥 NEW -->
+    <th>Days Left</th>
 
     <th>Actions</th>
 </tr>
 
 <%
-Vector<User> users = (Vector<User>) request.getAttribute("users");
+Vector<AdminUserRow> users = (Vector<AdminUserRow>) request.getAttribute("users");
 
 if(users != null){
-    for(User u : users){
+    for(AdminUserRow u : users){
 %>
 
 <tr>
@@ -35,18 +35,24 @@ if(users != null){
     <td><%= u.getPhone() %></td>
 
     <!-- 🔥 Membership Info -->
-    <td>Monthly</td> <!-- later dynamic -->
-    <td>2026-04-01</td>
-    <td>2026-05-01</td>
+    <td><%= (u.getPlanName() == null || u.getPlanName().isBlank()) ? "-" : u.getPlanName() %></td>
+    <td><%= (u.getStartDate() == null || u.getStartDate().isBlank()) ? "-" : u.getStartDate() %></td>
+    <td><%= (u.getEndDate() == null || u.getEndDate().isBlank()) ? "-" : u.getEndDate() %></td>
 
     <!-- 🔥 Status -->
     <td>
-        <span class="badge bg-success">ACTIVE</span>
-        <!-- later: EXPIRED / INACTIVE -->
+        <%
+            String st = (u.getMembershipStatus() == null) ? "NO PLAN" : u.getMembershipStatus();
+            String badgeCls = "bg-secondary";
+            if("ACTIVE".equalsIgnoreCase(st)) badgeCls = "bg-success";
+            else if("EXPIRED".equalsIgnoreCase(st)) badgeCls = "bg-danger";
+        %>
+        <span class="badge <%= badgeCls %>"><%= st %></span>
     </td>
 
-    <!-- 🔥 Payment -->
-    <td>₹999</td>
+    <td>
+        <%= "NO PLAN".equalsIgnoreCase(st) ? "-" : u.getDaysLeft() %>
+    </td>
 
     <td>
         <form id="deleteForm_<%= u.getEmail() %>" action="Delete" method="post" style="display:inline;">
@@ -65,11 +71,7 @@ if(users != null){
             <button class="btn btn-warning btn-sm">Edit</button>
         </form>
 
-        <!-- 🔥 NEW -->
-        <form action="AssignMembership" method="get" style="display:inline;">
-            <input type="hidden" name="email" value="<%= u.getEmail() %>">
-            <button class="btn btn-primary btn-sm">Assign</button>
-        </form>
+        <!-- Online purchase flow: no manual membership actions needed -->
     </td>
 </tr>
 <%

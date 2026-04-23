@@ -64,7 +64,7 @@
   <servlet-name>Delete</servlet-name>
   <url-pattern>/Delete</url-pattern>
   </servlet-mapping>
-  
+
   <servlet>
     <servlet-name>Logout</servlet-name>
   <servlet-class>Logout</servlet-class>

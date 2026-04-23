@@ -1,103 +1,20 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.Vector, com.model.Payments, com.model.PaymentsDAO" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Payments</title>
-
+<div class="card-box">
 <style>
-
-/* Background */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #020617);
-    color: white;
-}
-
-/* Container */
-.payments-container {
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-/* Title */
-.title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-/* Card */
-.payment-card {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 15px;
-    margin-bottom: 12px;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: 0.3s;
-}
-
-.payment-card:hover {
-    transform: translateY(-3px);
-}
-
-/* Top Row */
-.row-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Amount */
-.amount {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-/* Status */
-.status-paid {
-    color: #22c55e;
-    font-weight: bold;
-}
-
-.status-pending {
-    color: #ef4444;
-    font-weight: bold;
-}
-
-/* Details */
-.details {
-    margin-top: 6px;
-    font-size: 14px;
-    color: #cbd5f5;
-}
-
-/* Method badge */
-.method {
-    display: inline-block;
-    margin-top: 6px;
-    font-size: 12px;
-    background: rgba(255,255,255,0.1);
-    padding: 4px 8px;
-    border-radius: 6px;
-}
-
+    .payments-scroll {
+        max-height: 340px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border-radius: 10px;
+    }
 </style>
-</head>
 
-<body>
-
-<div class="payments-container">
-
-    <div class="title">💸 Payments</div>
-
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h5 class="mb-0">Payments</h5>
+    <span class="badge bg-secondary-subtle text-secondary">History</span>
+</div>
 
 <%
 String email = (String) session.getAttribute("email");
@@ -105,46 +22,47 @@ String email = (String) session.getAttribute("email");
 PaymentsDAO dao = new PaymentsDAO();
 Vector<Payments> payments = dao.getuserdata(email);
 %>
-<% 
-if(payments != null && !payments.isEmpty()){
-    for(Payments p : payments){
-%>
 
-<div class="payment-card">
+<% if(payments != null && !payments.isEmpty()){ %>
 
-    <div class="row-top">
-        <div class="amount">&#8377;<%= p.getAmount() %></div>
+<div class="table-responsive payments-scroll">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Method</th>
+            </tr>
+        </thead>
+        <tbody>
 
-        <div class="<%= p.getPayment_status().equalsIgnoreCase("Paid") ? "status-paid" : "status-pending" %>">
-            <%= p.getPayment_status().toUpperCase() %>
-        </div>
-    </div>
+        <% for(Payments p : payments){ %>
 
-    <div class="details">
-        📅 <%= p.getPayment_date() %><br>
-        👤 User ID: <%= p.getUser_id() %>
-    </div>
+        <tr>
+            <td class="fw-semibold">₹<%= p.getAmount() %></td>
 
-    <div class="details">
-        <span class="method">💳 <%= p.getPayment_method() %></span>
-    </div>
+            <td>
+                <span class="badge <%= p.getPayment_status().equalsIgnoreCase("Paid") ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger" %>">
+                    <%= p.getPayment_status() %>
+                </span>
+            </td>
 
+            <td><%= p.getPayment_date() %></td>
+
+            <td><%= p.getPayment_method() %></td>
+        </tr>
+
+        <% } %>
+
+        </tbody>
+    </table>
 </div>
 
-<%
-    }
-} else {
-%>
+<% } else { %>
 
-<div style="text-align:center; color:#aaa;">
-    No payments found
-</div>
+<p class="text-muted text-center mb-0">No payments found</p>
 
-<%
-}
-%>
+<% } %>
 
 </div>
-
-</body>
-</html>
