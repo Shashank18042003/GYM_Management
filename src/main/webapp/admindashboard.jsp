@@ -141,7 +141,8 @@ String currentPage = request.getParameter("page");
             <a href="#">
                 <i class="bi bi-calendar-event"></i> Add Events
             </a>
-
+			<a href="admindashboard.jsp?page=adminpayments.jsp">
+				<i class="bi bi-clock-history"></i> Payment Received</a>			
             <a href="Logout">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>

@@ -39,6 +39,13 @@ public void setPayment_method(String payment_method) {
 	this.payment_method = payment_method;
 }
 int user_id;
+String Email;
+public String getEmail() {
+	return Email;
+}
+public void setEmail(String email) {
+	Email = email;
+}
 double amount;
 String payment_date ;
 String payment_status;

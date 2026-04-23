@@ -4,7 +4,11 @@
 <div class="container">
 
     <h3 class="mb-3">User Details</h3>
-
+<div class="d-flex justify-content-end mb-3">
+    <a href="ExportUsers" class="btn btn-success btn-sm">
+        ⬇ Export Users
+    </a>
+</div>
     <table class="table table-bordered table-hover">
 
       <tr class="table-dark">
