@@ -53,6 +53,9 @@
     
     <h3 class="text-center mb-2 brand">Gym System</h3>
     <p class="text-center text-muted mb-4">Sign in to continue</p>
+    <div id="registerBanner" class="alert alert-success py-2 d-none" role="alert">
+        Registration successful. Please login.
+    </div>
 
     <form onsubmit="return validateLogin()" action="Login" method="get">
 
@@ -86,6 +89,15 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("registered") === "1") {
+      const banner = document.getElementById("registerBanner");
+      if (banner) banner.classList.remove("d-none");
+    }
+  })();
+</script>
 
 </body>
 </html>
