@@ -115,17 +115,26 @@ public class UserDAO implements ProjectDesign{
 				r.setEndDate(jrs.getString("end_date"));
 
 				// Compute status + days left for admin display
+				String startRaw = r.getStartDate();
 				String endRaw = r.getEndDate();
-				if (endRaw == null || endRaw.isBlank()) {
+				if (endRaw == null || endRaw.isBlank() || startRaw == null || startRaw.isBlank()) {
 					r.setMembershipStatus("NO PLAN");
 					r.setDaysLeft(0);
 				} else {
-					String endClean = endRaw.split(" ")[0]; // handles "YYYY-MM-DD HH:mm:ss"
-					java.time.LocalDate end = java.time.LocalDate.parse(endClean);
-					long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDate.now(), end);
+					java.time.LocalDate today = java.time.LocalDate.now();
+					java.time.LocalDate start = java.time.LocalDate.parse(startRaw.split(" ")[0]);
+					java.time.LocalDate end = java.time.LocalDate.parse(endRaw.split(" ")[0]);
 
+					long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(today, end);
 					r.setDaysLeft((int) daysLeft);
-					r.setMembershipStatus(daysLeft >= 0 ? "ACTIVE" : "EXPIRED");
+
+					if (today.isBefore(start)) {
+						r.setMembershipStatus("UPCOMING");
+					} else if (today.isAfter(end)) {
+						r.setMembershipStatus("EXPIRED");
+					} else {
+						r.setMembershipStatus("ACTIVE");
+					}
 				}
 
 				rows.add(r);

@@ -83,6 +83,15 @@
   <servlet-name>UserDashboard</servlet-name>
   <url-pattern>/UserDashboard</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>TestPurchase</servlet-name>
+    <servlet-class>TestPurchase</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TestPurchase</servlet-name>
+    <url-pattern>/TestPurchase</url-pattern>
+  </servlet-mapping>
   
   
 </web-app>

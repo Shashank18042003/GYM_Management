@@ -23,6 +23,12 @@
             <div class="price text-warning">₹1500</div>
             <p>30 Days</p>
             <button class="btn btn-warning w-100 buy-btn" onclick="pay(1500)">Buy</button>
+            <form action="TestPurchase" method="post" class="mt-2">
+                <input type="hidden" name="plan" value="Monthly">
+                <input type="hidden" name="amount" value="1500">
+                <input type="hidden" name="days" value="30">
+                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
+            </form>
         </div>
     </div>
 
@@ -34,6 +40,12 @@
             <div class="price text-primary">₹4000</div>
             <p>90 Days</p>
             <button class="btn btn-primary w-100 buy-btn" onclick="pay(4000)">Buy</button>
+            <form action="TestPurchase" method="post" class="mt-2">
+                <input type="hidden" name="plan" value="Quarterly">
+                <input type="hidden" name="amount" value="4000">
+                <input type="hidden" name="days" value="90">
+                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
+            </form>
         </div>
     </div>
 
@@ -44,6 +56,12 @@
             <div class="price text-info">₹7500</div>
             <p>180 Days</p>
             <button class="btn btn-info w-100 buy-btn" onclick="pay(7500)">Buy</button>
+            <form action="TestPurchase" method="post" class="mt-2">
+                <input type="hidden" name="plan" value="Half-Year">
+                <input type="hidden" name="amount" value="7500">
+                <input type="hidden" name="days" value="180">
+                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
+            </form>
         </div>
     </div>
 
@@ -54,6 +72,12 @@
             <div class="price text-success">₹10000</div>
             <p>365 Days</p>
             <button class="btn btn-success w-100 buy-btn" onclick="pay(10000)">Buy</button>
+            <form action="TestPurchase" method="post" class="mt-2">
+                <input type="hidden" name="plan" value="Annual">
+                <input type="hidden" name="amount" value="10000">
+                <input type="hidden" name="days" value="365">
+                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
+            </form>
         </div>
     </div>
 
