@@ -56,11 +56,24 @@
 
             <a href="#"><i class="bi bi-person-circle"></i> My Profile</a>
 
-			<a href="#"><i class="bi bi-card-checklist"></i> Membership</a>
+			<a href="#"><i class="bi bi-card-checklist"></i> View Membership</a>
 
 			<a href="rechargeplan.jsp"><i class="bi bi-credit-card"></i> Recharge Plan</a>
 
 			<a href="#"><i class="bi bi-clock-history"></i> Payment History</a>
+			
+			<a href="ViewEventsUser">
+    		<i class="bi bi-calendar-event"></i> Check Events
+
+    		<%
+        	Boolean hasNew = (Boolean) request.getAttribute("hasNew");
+        	if(hasNew != null && hasNew){
+    		%>
+        	<span style="color:red;"> ●</span>
+    		<%
+        	}
+    		%>
+			</a>
 
 			<a href="login.html"><i class="bi bi-box-arrow-right"></i> Logout</a>
 

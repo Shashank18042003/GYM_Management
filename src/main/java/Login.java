@@ -30,7 +30,7 @@ public class Login extends HttpServlet {
 				response.sendRedirect("Elements");
 			}
 			else {
-		        response.sendRedirect("userdashboard.jsp");
+		        response.sendRedirect("UserDashboard");
 		    }
 		}
 		else {

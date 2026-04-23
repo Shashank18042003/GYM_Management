@@ -58,7 +58,8 @@
 
             <a href="userregister.jsp"><i class="bi bi-person-plus"></i> User Register</a>
             <a href="Fetch"><i class="bi bi-people"></i> User Details</a>
-            <a href="#"><i class="bi bi-calendar-event"></i> Add Events</a>
+            <a href="ViewEventsAdmin"><i class="bi bi-calendar-event"></i> Add Events</a>
+            <a href="#"><i class="bi bi-clock-history"></i> Payment Received</a>
             <a href="login.html"><i class="bi bi-box-arrow-right"></i> Logout</a>
 
         </div>
@@ -66,7 +67,7 @@
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 content">
 
-            <h2>Welcome Admin 👋</h2>
+            <h2>Welcome Admin</h2>
             <p class="text-muted">Manage your gym system here</p>
 
             <div class="row mt-4">
