@@ -58,7 +58,7 @@
 
 			<a href="#"><i class="bi bi-card-checklist"></i> Membership</a>
 
-			<a href="#"><i class="bi bi-credit-card"></i> Recharge Plan</a>
+			<a href="rechargeplan.jsp"><i class="bi bi-credit-card"></i> Recharge Plan</a>
 
 			<a href="#"><i class="bi bi-clock-history"></i> Payment History</a>
 
@@ -69,7 +69,7 @@
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 content">
 
-            <h2>Welcome ${username} 👋</h2>
+            <h2>Welcome ${user.username} 👋</h2>
             <p class="text-muted">Here is your gym overview</p>
 
             <div class="row mt-4">
@@ -103,9 +103,9 @@
             <!-- Profile Section -->
             <div class="card shadow p-4 mt-4">
                 <h5>My Details</h5>
-                <p><strong>Name:</strong> ${username}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Name:</strong> ${user.username}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Phone:</strong> ${user.phone}</p>
             </div>
 
         </div>

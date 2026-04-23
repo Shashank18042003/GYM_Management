@@ -26,6 +26,7 @@ public class UserDAO implements ProjectDesign{
 				u.setId(jrs.getInt("id"));
 				u.setEmail(jrs.getString("email"));
 				u.setUsername(jrs.getString("username"));
+				u.setPhone(jrs.getString("phone"));
 				return u;
 			}
 		}

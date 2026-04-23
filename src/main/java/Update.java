@@ -11,7 +11,6 @@ import com.model.UserDAO;
 
 public class Update extends HttpServlet {
 
-    // 🔹 Show Update Form (HTML inside servlet)
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -133,7 +132,6 @@ public class Update extends HttpServlet {
     	    out.println("User not found");
     	}
     }
-    // 🔹 Update Logic (same as yours ✔)
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
