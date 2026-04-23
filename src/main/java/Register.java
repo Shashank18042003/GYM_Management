@@ -38,14 +38,20 @@ public class Register extends HttpServlet {
 	
 	UserDAO userDAO=new UserDAO();
 	int r=userDAO.register(user);
-	if(r>0)
+	if(r > 0)
 	{
-		response.sendRedirect("sucessfulregister.html");
+	    request.setAttribute("msg", "User Registered Successfully ✅");
 	}
-	else {
-		response.sendRedirect("userexists.html");
+
+	else
+	{
+	    request.setAttribute("msg", "User already exists ❌");
+
 	}
-	
+
+	// 🔥 go back to dashboard with same page
+	request.getRequestDispatcher("admindashboard.jsp?page=userregister.jsp")
+	       .forward(request, response);
 	
 	}
 

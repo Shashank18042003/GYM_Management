@@ -10,4 +10,5 @@ public void updateUserByEmail(User user);
 void delete(String email);
 Vector<User> fetch();
 int userCount();
+User getUserById(int userId);
 }

@@ -6,16 +6,11 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        body {
-            margin: 0;
-        }
+        body { margin: 0; }
 
         .sidebar {
             height: 100vh;
@@ -36,13 +31,8 @@
             color: white;
         }
 
-        .content {
-            padding: 20px;
-        }
-
-        .card-box {
-            border-radius: 10px;
-        }
+        .content { padding: 20px; }
+        .card-box { border-radius: 10px; }
     </style>
 </head>
 
@@ -70,17 +60,16 @@
             <h2>Welcome Admin</h2>
             <p class="text-muted">Manage your gym system here</p>
 
+            <!-- Cards -->
             <div class="row mt-4">
 
-                <!-- Total Users -->
                 <div class="col-md-4">
                     <div class="card shadow p-3 card-box">
                         <h5>Total Users</h5>
-                        <h3>${totalUsers}</h3>
+                        <h3>${sessionScope.totalUsers}</h3>
                     </div>
                 </div>
 
-                <!-- Active Members -->
                 <div class="col-md-4">
                     <div class="card shadow p-3 card-box">
                         <h5>Active Members</h5>
@@ -88,7 +77,6 @@
                     </div>
                 </div>
 
-                <!-- Events -->
                 <div class="col-md-4">
                     <div class="card shadow p-3 card-box">
                         <h5>Events</h5>
@@ -97,6 +85,11 @@
                 </div>
 
             </div>
+
+            <!-- 🔥 Dynamic Include -->
+            <div class="mt-4" style="max-height: 500px; overflow-y: auto;">
+    <jsp:include page="${param.page}" />
+</div>
 
         </div>
 
