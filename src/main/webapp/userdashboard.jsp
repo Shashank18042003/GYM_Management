@@ -7,6 +7,8 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         body {
@@ -52,18 +54,35 @@
 
             <h4 class="text-center mb-4">User Panel</h4>
 
-            <a href="#">My Profile</a>
-            <a href="#">Membership</a>
-            <a href="#">Recharge Plan</a>
-            <a href="#">Payment History</a>
-            <a href="login.html">Logout</a>
+            <a href="#"><i class="bi bi-person-circle"></i> My Profile</a>
+
+			<a href="#"><i class="bi bi-card-checklist"></i> View Membership</a>
+
+			<a href="rechargeplan.jsp"><i class="bi bi-credit-card"></i> Recharge Plan</a>
+
+			<a href="#"><i class="bi bi-clock-history"></i> Payment History</a>
+			
+			<a href="ViewEventsUser">
+    		<i class="bi bi-calendar-event"></i> Check Events
+
+    		<%
+        	Boolean hasNew = (Boolean) request.getAttribute("hasNew");
+        	if(hasNew != null && hasNew){
+    		%>
+        	<span style="color:red;"> ●</span>
+    		<%
+        	}
+    		%>
+			</a>
+
+			<a href="login.html"><i class="bi bi-box-arrow-right"></i> Logout</a>
 
         </div>
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 content">
 
-            <h2>Welcome ${sessionScope.user.getUsername()} </h2>
+            <h2>Welcome ${user.username} 👋</h2>
             <p class="text-muted">Here is your gym overview</p>
 
             <div class="row mt-4">
@@ -97,9 +116,9 @@
             <!-- Profile Section -->
             <div class="card shadow p-4 mt-4">
                 <h5>My Details</h5>
-                <p><strong>Name:</strong> ${sessionScope.user.getUsername()}</p>
-                <p><strong>Email:</strong> ${sessionScope.email}</p>
-                <p><strong>Phone:</strong> ${sessionScope.user.getPhone()}</p>
+                <p><strong>Name:</strong> ${user.username}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Phone:</strong> ${user.phone}</p>
             </div>
 
         </div>

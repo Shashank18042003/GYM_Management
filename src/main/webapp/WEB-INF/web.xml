@@ -33,12 +33,84 @@
   <servlet-name>Fetch</servlet-name>
   <url-pattern>/Fetch</url-pattern>
   </servlet-mapping>
-   <servlet>
-  <servlet-name>Admindashboard</servlet-name>
-  <servlet-class>Admindashboard</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Admindashboard</servlet-name>
-  <url-pattern>/Admindashboard</url-pattern>
-  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Elements</servlet-name>
+    <servlet-class>Elements</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>Elements</servlet-name>
+    <url-pattern>/Elements</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>Update</servlet-name>
+    <servlet-class>Update</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>Update</servlet-name>
+    <url-pattern>/Update</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>Delete</servlet-name>
+    <servlet-class>Delete</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>Delete</servlet-name>
+    <url-pattern>/Delete</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>DeleteEvent</servlet-name>
+    <servlet-class>DeleteEvent</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>DeleteEvent</servlet-name>
+    <url-pattern>/DeleteEvent</url-pattern>
+</servlet-mapping>
+
+
+<servlet>
+    <servlet-name>AddEvent</servlet-name>
+    <servlet-class>AddEvent</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>AddEvent</servlet-name>
+    <url-pattern>/AddEvent</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>ViewEventsAdmin</servlet-name>
+    <servlet-class>ViewEventsAdmin</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>ViewEventsAdmin</servlet-name>
+    <url-pattern>/ViewEventsAdmin</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>ViewEventsUser</servlet-name>
+    <servlet-class>ViewEventsUser</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>ViewEventsUser</servlet-name>
+    <url-pattern>/ViewEventsUser</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>UserDashboard</servlet-name>
+    <servlet-class>UserDashboard</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>UserDashboard</servlet-name>
+    <url-pattern>/UserDashboard</url-pattern>
+</servlet-mapping>
 </web-app>

@@ -6,15 +6,15 @@ import java.util.Vector;
 
 import javax.sql.rowset.JdbcRowSet;
 
-import com.DBconnection.Myjdbc;
-import com.DBconnection.MyrowSet;
+import com.myjars.MyConnection;
+import com.myjars.MyJdbcRowSet;
 
 
 public class UserDAO implements ProjectDesign{
 
 	@Override
 	public User login(String email,String password) {
-		JdbcRowSet jrs=MyrowSet.Myrowset();
+		JdbcRowSet jrs=MyJdbcRowSet.MyJdbcRowSet();
 		try {
 			jrs.setCommand("select * from gym_users where email=? and password=?");
 			jrs.setString(1, email);
@@ -23,11 +23,10 @@ public class UserDAO implements ProjectDesign{
 			if(jrs.next())
 			{
 				User u=new User();
-				//u.setId(jrs.getInt("id"));
-				
+				u.setId(jrs.getInt("id"));
+				u.setEmail(jrs.getString("email"));
 				u.setUsername(jrs.getString("username"));
 				u.setPhone(jrs.getString("phone"));
-
 				return u;
 			}
 		}
@@ -41,7 +40,7 @@ public class UserDAO implements ProjectDesign{
 	@Override
 	public int register(User user) {
 		int r=0;
-		Connection connection=Myjdbc.myconn();
+		Connection connection=MyConnection.connect();
 		try {
 			
 			PreparedStatement preparedStatement=connection.prepareStatement("insert into gym_users (Username, email, password, age, gender, phone, address, weight, height, doj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -66,26 +65,88 @@ public class UserDAO implements ProjectDesign{
 	
 
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
-	}
+	public User getUserByEmail(String email) {
 
+	    User user = null;
+	    JdbcRowSet jrs = MyJdbcRowSet.MyJdbcRowSet();
+
+	    try {
+	        jrs.setCommand("SELECT * FROM gym_users WHERE email=?");
+	        jrs.setString(1, email);
+	        jrs.execute();
+
+	        if (jrs.next()) {
+	            user = new User();
+	            user.setEmail(jrs.getString("email"));
+	            user.setUsername(jrs.getString("username"));
+	            user.setPassword(jrs.getString("password"));
+	            user.setAge(jrs.getInt("age"));
+	            user.setGender(jrs.getString("gender"));
+	            user.setPhone(jrs.getString("phone"));
+	            user.setAddress(jrs.getString("address"));
+	            user.setWeight(jrs.getInt("weight"));
+	            user.setHeight(jrs.getInt("height"));
+	            user.setDoj(jrs.getString("doj"));
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return user;
+	}
+	
+	
 	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
+	public void updateUserByEmail(User user) {
+
+	    try {
+	        Connection con = MyConnection.connect();
+
+	        PreparedStatement ps = con.prepareStatement(
+	            "UPDATE gym_users SET username=?, password=?, age=?, gender=?, phone=?, address=?, weight=?, height=?, doj=? WHERE email=?"
+	        );
+
+	        ps.setString(1, user.getUsername());
+	        ps.setString(2, user.getPassword());
+	        ps.setInt(3, user.getAge());
+	        ps.setString(4, user.getGender());
+	        ps.setString(5, user.getPhone());
+	        ps.setString(6, user.getAddress());
+	        ps.setInt(7, user.getWeight());
+	        ps.setInt(8, user.getHeight());
+	        ps.setString(9, user.getDoj());
+	        ps.setString(10, user.getEmail());
+
+	        ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	@Override
+	public void delete(String email) {
+		 
+		Connection connection=MyConnection.connect();
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM gym_users WHERE email=?");
+			preparedStatement.setString(1, email);
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public Vector<User> fetch() {
 		// TODO Auto-generated method stub
-		JdbcRowSet jrs=MyrowSet.Myrowset();
+		JdbcRowSet jrs=MyJdbcRowSet.MyJdbcRowSet();
 		Vector vector=new Vector();
 		try {
 			
 			jrs.setCommand("select * from gym_users");
-			
 			jrs.execute();
 			for(;jrs.next();)
 			{
@@ -115,7 +176,7 @@ public class UserDAO implements ProjectDesign{
 	@Override
 	public int userCount() {
 		 int count = 0;
-		JdbcRowSet jrs=MyrowSet.Myrowset();
+		JdbcRowSet jrs=MyJdbcRowSet.MyJdbcRowSet();
 		try {
 			
 			jrs.setCommand("select count(email) from gym_users where email!=? ");
@@ -133,10 +194,6 @@ public class UserDAO implements ProjectDesign{
 		return count;
 	}
 
-	@Override
-	public User getUserById(int userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

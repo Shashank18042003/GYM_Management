@@ -2,6 +2,22 @@ package com.model;
 
 
 public class User {
+	private int id;
+	private String Username;
+    private String email;
+    private String password;
+    private int age;
+    private String gender;
+    private String phone;
+    private String address;
+    private int weight;
+    private int height;
+    private String doj;
+	
+	
+	
+	
+	
     public String getUsername() {
 		return Username;
 	}
@@ -62,15 +78,13 @@ public class User {
 	public void setDoj(String doj) {
 		this.doj = doj;
 	}
-	public String Username;
-    public String email;
-    public String password;
-    public int age;
-    public String gender;
-    public String phone;
-    public String address;
-    public int weight;
-    public int height;
-    public String doj;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
    
 }

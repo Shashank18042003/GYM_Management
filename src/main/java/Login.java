@@ -1,14 +1,14 @@
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import com.model.User;
 import com.model.UserDAO;
-
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 public class Login extends HttpServlet {
 	
@@ -18,32 +18,17 @@ public class Login extends HttpServlet {
 		String password=request.getParameter("password");
 		UserDAO ud=new UserDAO();
 		User user=ud.login(email,password); 
-
-		int totalCount=0;
-		totalCount=ud.userCount();
-
-		HttpSession hs=request.getSession();
-		
-
 		if(user!=null)
 		{
-			 hs.setAttribute("email",email);
-			 hs.setAttribute("logged_in", true);
-			 hs.setAttribute("user", user);
+			HttpSession hs=request.getSession();
+			hs.setAttribute("user", user);
+			
 			if(email.equals("admin@gmail.com"))
 			{
-
-
-
-				
-				  RequestDispatcher rd = request.getRequestDispatcher("Admindashboard");
-
-				    rd.forward(request, response);
-
-			
+				response.sendRedirect("Elements");
 			}
 			else {
-		        response.sendRedirect("userdashboard.jsp");
+		        response.sendRedirect("UserDashboard");
 		    }
 		}
 		else {
