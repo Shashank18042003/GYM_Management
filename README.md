@@ -23,5 +23,11 @@ CREATE TABLE payments (
 creating admin account
 INSERT INTO gym_users(username, email, password, age, gender, phone,address,weight,height, doj) VALUES ('Admin', 'admin@gmail.com', 'admin123', 25, 'male','6281020126' , 'city', 60, 180, CURDATE());
 
-
-insert
+#################################################################################################
+event database
+CREATE TABLE events (
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     title VARCHAR(100),
+    ->     description VARCHAR(255),
+    ->     event_date DATE
+    -> );
