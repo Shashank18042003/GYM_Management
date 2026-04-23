@@ -41,6 +41,7 @@ public class Register extends HttpServlet {
 	if(r > 0)
 	{
 	    request.setAttribute("msg", "User Registered Successfully ✅");
+	
 	}
 
 	else

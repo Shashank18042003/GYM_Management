@@ -89,7 +89,7 @@ response.setDateHeader("Expires", 0);
                 <div class="col-md-4">
                     <div class="card shadow p-3 card-box">
                         <h5>Active Members</h5>
-                        <h3>${activeMembers}</h3>
+                        <h3>${sessionScope.activeMembers}</h3>
                     </div>
                 </div>
 

@@ -26,13 +26,34 @@
 
 <div class="card shadow p-4 form-card">
 
-    <!-- Back Button -->
-    <div class="d-flex justify-content-end mb-2">
-        <a href="admindashboard.jsp" class="btn btn-outline-secondary btn-sm">
-            ← Back
-        </a>
-    </div>
+<%
+HttpSession hs = request.getSession(false);
 
+if(hs != null && hs.getAttribute("userId") != null){
+%>
+
+<!-- Logged-in (admin view) -->
+<div class="d-flex justify-content-end mb-2">
+    <a href="Admindashboard" class="btn btn-outline-secondary btn-sm">
+        ← Back
+    </a>
+</div>
+
+<%
+} else {
+%>
+
+<!-- Not logged-in (public view) -->
+<div class="d-flex justify-content-start mb-2">
+    <a href="login.html" class="btn btn-outline-secondary btn-sm">
+        ← Login
+    </a>
+</div>
+
+<%
+}
+%>
+  
     <h3 class="text-center mb-4">User Registration</h3>
 
     <!-- OPTIONAL: success message -->
