@@ -49,12 +49,18 @@ if(users != null){
     <td>₹999</td>
 
     <td>
-        <form action="DeleteUser" method="post" style="display:inline;">
-            <input type="hidden" name="email" value="<%= u.getEmail() %>">
-            <button class="btn btn-danger btn-sm">Delete</button>
-        </form>
+        <form id="deleteForm_<%= u.getEmail() %>" action="Delete" method="post" style="display:inline;">
+    
+    <input type="hidden" name="email" value="<%= u.getEmail() %>">
 
-        <form action="EditUser" method="get" style="display:inline;">
+    <button type="button"
+            onclick="confirmDelete('<%= u.getEmail() %>')"
+            class="btn btn-danger btn-sm">
+        Delete
+    </button>
+</form>
+
+        <form action="Update" method="get" style="display:inline;">
             <input type="hidden" name="email" value="<%= u.getEmail() %>">
             <button class="btn btn-warning btn-sm">Edit</button>
         </form>
@@ -73,3 +79,20 @@ if(users != null){
     </table>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function confirmDelete(email){
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This user will be deleted!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById("deleteForm_" + email).submit();
+        }
+    });
+}
+</script>

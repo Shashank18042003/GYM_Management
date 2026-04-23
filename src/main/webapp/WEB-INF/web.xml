@@ -9,6 +9,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
   <servlet>
   <servlet-name>Login</servlet-name>
   <servlet-class>Login</servlet-class>
@@ -17,6 +18,7 @@
   <servlet-name>Login</servlet-name>
   <url-pattern>/Login</url-pattern>
   </servlet-mapping>
+  
   <servlet>
   <servlet-name>Register</servlet-name>
   <servlet-class>Register</servlet-class>
@@ -25,6 +27,7 @@
   <servlet-name>Register</servlet-name>
   <url-pattern>/Register</url-pattern>
   </servlet-mapping>
+  
   <servlet>
   <servlet-name>Fetch</servlet-name>
   <servlet-class>Fetch</servlet-class>
@@ -33,6 +36,7 @@
   <servlet-name>Fetch</servlet-name>
   <url-pattern>/Fetch</url-pattern>
   </servlet-mapping>
+  
    <servlet>
   <servlet-name>Admindashboard</servlet-name>
   <servlet-class>Admindashboard</servlet-class>
@@ -41,4 +45,43 @@
   <servlet-name>Admindashboard</servlet-name>
   <url-pattern>/Admindashboard</url-pattern>
   </servlet-mapping>
+  
+  
+   <servlet>
+    <servlet-name>Update</servlet-name>
+  <servlet-class>Update</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  <servlet-name>Update</servlet-name>
+  <url-pattern>/Update</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Delete</servlet-name>
+  <servlet-class>Delete</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  <servlet-name>Delete</servlet-name>
+  <url-pattern>/Delete</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Logout</servlet-name>
+  <servlet-class>Logout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  <servlet-name>Logout</servlet-name>
+  <url-pattern>/Logout</url-pattern>
+  </servlet-mapping>
+
+  
+   <servlet>
+    <servlet-name>UserDashboard</servlet-name>
+  <servlet-class>UserDashboard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  <servlet-name>UserDashboard</servlet-name>
+  <url-pattern>/UserDashboard</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

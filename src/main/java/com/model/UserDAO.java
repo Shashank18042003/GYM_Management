@@ -23,8 +23,7 @@ public class UserDAO implements ProjectDesign{
 			if(jrs.next())
 			{
 				User u=new User();
-				//u.setId(jrs.getInt("id"));
-				
+				u.setId(jrs.getInt("id"));
 				u.setUsername(jrs.getString("username"));
 				u.setPhone(jrs.getString("phone"));
 
@@ -84,8 +83,8 @@ public class UserDAO implements ProjectDesign{
 		Vector vector=new Vector();
 		try {
 			
-			jrs.setCommand("select * from gym_users");
-			
+			jrs.setCommand("select * from gym_users where email!=?");
+			jrs.setString(1,"admin@gmail.com");
 			jrs.execute();
 			for(;jrs.next();)
 			{
@@ -112,6 +111,41 @@ public class UserDAO implements ProjectDesign{
 		return vector;
 		
 	}
+
+	@Override
+	public User getUserByEmail(String email) {
+
+	    User user = null;
+	    JdbcRowSet jrs = MyrowSet.Myrowset();
+
+	    try {
+	        jrs.setCommand("SELECT * FROM gym_users WHERE email=?");
+	        jrs.setString(1, email);
+	        jrs.execute();
+
+	        if (jrs.next()) {
+	            user = new User();
+	            user.setEmail(jrs.getString("email"));
+	            user.setUsername(jrs.getString("username"));
+	            user.setPassword(jrs.getString("password"));
+	            user.setAge(jrs.getInt("age"));
+	            user.setGender(jrs.getString("gender"));
+	            user.setPhone(jrs.getString("phone"));
+	            user.setAddress(jrs.getString("address"));
+	            user.setWeight(jrs.getInt("weight"));
+	            user.setHeight(jrs.getInt("height"));
+	            user.setDoj(jrs.getString("doj"));
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return user;
+	}
+	
+	
+
 	@Override
 	public int userCount() {
 		 int count = 0;
@@ -134,9 +168,46 @@ public class UserDAO implements ProjectDesign{
 	}
 
 	@Override
-	public User getUserById(int userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public void updateUserByEmail(User user) {
+
+	    try {
+	        Connection con = Myjdbc.myconn();
+
+	        PreparedStatement ps = con.prepareStatement(
+	            "UPDATE gym_users SET username=?, password=?, age=?, gender=?, phone=?, address=?, weight=?, height=?, doj=? WHERE email=?"
+	        );
+
+	        ps.setString(1, user.getUsername());
+	        ps.setString(2, user.getPassword());
+	        ps.setInt(3, user.getAge());
+	        ps.setString(4, user.getGender());
+	        ps.setString(5, user.getPhone());
+	        ps.setString(6, user.getAddress());
+	        ps.setInt(7, user.getWeight());
+	        ps.setInt(8, user.getHeight());
+	        ps.setString(9, user.getDoj());
+	        ps.setString(10, user.getEmail());
+
+	        ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
+	@Override
+	public void delete(String email) {
+		 
+		Connection connection=Myjdbc.myconn();
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM gym_users WHERE email=?");
+			preparedStatement.setString(1, email);
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	
 }

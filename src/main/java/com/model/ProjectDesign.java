@@ -9,5 +9,8 @@ void update();
 void delete();
 Vector<User> fetch();
 int userCount();
-User getUserById(int userId);
+
+public User getUserByEmail(String email);
+public void updateUserByEmail(User user);
+void delete(String email);
 }

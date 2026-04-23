@@ -28,22 +28,16 @@ public class Login extends HttpServlet {
 		if(user!=null)
 		{
 			 hs.setAttribute("email",email);
-			 hs.setAttribute("logged_in", true);
 			 hs.setAttribute("user", user);
+			 hs.setAttribute("userId", user.getId());
 			if(email.equals("admin@gmail.com"))
 			{
 
-
-
-				
-				  RequestDispatcher rd = request.getRequestDispatcher("Admindashboard");
-
-				    rd.forward(request, response);
-
-			
+			    response.sendRedirect("Admindashboard"); // ✅ MUST
+			    return;
 			}
 			else {
-		        response.sendRedirect("userdashboard.jsp");
+		        response.sendRedirect("UserDashboard");
 		    }
 		}
 		else {
@@ -51,7 +45,7 @@ public class Login extends HttpServlet {
 		}
 	}
 	
-
+	
 	
 
 }

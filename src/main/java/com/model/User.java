@@ -2,6 +2,12 @@ package com.model;
 
 
 public class User {
+	 public int getId() {
+			return Id;
+		}
+		public void setId(int Id) {
+			this.Id =Id;
+		}
     public String getUsername() {
 		return Username;
 	}
@@ -72,5 +78,6 @@ public class User {
     public int weight;
     public int height;
     public String doj;
+    public int Id;
    
 }

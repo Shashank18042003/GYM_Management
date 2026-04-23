@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
+
+<%
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+response.setHeader("Pragma", "no-cache");
+response.setDateHeader("Expires", 0);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +62,7 @@
             <a href="#">Membership</a>
             <a href="#">Recharge Plan</a>
             <a href="#">Payment History</a>
-            <a href="login.html">Logout</a>
+            <a href="Logout">Logout</a>
 
         </div>
 
