@@ -11,7 +11,7 @@ public class MembershipDAO implements MembershipDesign {
 		int count=0;
 		JdbcRowSet jrs=MyrowSet.Myrowset();
 		try {
-		jrs.setCommand("SELECT COUNT(*) FROM membership WHERE end_date >= CURRENT_DATE");
+		jrs.setCommand("SELECT COUNT(DISTINCT m.user_id)FROM membership m JOIN gym_users u ON u.id = m.user_id WHERE u.email!= 'admin@gmail.com'  AND m.start_date <= CURDATE()  AND m.end_date >= CURDATE();");
 		jrs.execute();
 		if(jrs.next())
 		{

@@ -1,14 +1,14 @@
 import java.io.IOException;
 import java.util.Vector;
 
+import com.model.AdminUserRow;
+import com.model.UserDAO;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import com.model.User;
-import com.model.UserDAO;
 
 public class Fetch extends HttpServlet {
 
@@ -18,7 +18,7 @@ public class Fetch extends HttpServlet {
         UserDAO dao = new UserDAO();
 
         // Fetch users from DB
-        Vector<User> users = dao.fetch();
+        Vector<AdminUserRow> users = dao.fetch();
 
         // Send data to JSP
         request.setAttribute("users", users);
