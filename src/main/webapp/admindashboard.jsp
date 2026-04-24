@@ -5,6 +5,10 @@ response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 response.setHeader("Pragma", "no-cache");
 response.setDateHeader("Expires", 0);
 String currentPage = request.getParameter("page");
+if (currentPage == null || currentPage.trim().isEmpty()) {
+    Object pageAttr = request.getAttribute("page");
+    if (pageAttr != null) currentPage = pageAttr.toString();
+}
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -129,7 +133,7 @@ String currentPage = request.getParameter("page");
 
             <h4 class="text-center mb-4">Admin Panel</h4>
 
-            <a class="<%= "userregister.jsp".equals(currentPage) ? "active-link" : "" %>" href="admindashboard.jsp?page=userregister.jsp">
+            <a class="<%= "userregister.jsp".equals(currentPage) ? "active-link" : "" %>" href="Admindashboard?page=userregister.jsp">
                 <i class="bi bi-person-plus"></i> User Register
             </a>
 
@@ -138,15 +142,15 @@ String currentPage = request.getParameter("page");
                 <i class="bi bi-people"></i> User Details
             </a>
 
-            <a href="#">
-                <i class="bi bi-calendar-event"></i> Add Events
-            </a>
-			<a href="admindashboard.jsp?page=adminpayments.jsp">
+          <a class="<%= "viewevents.jsp".equals(currentPage) ? "active-link" : "" %>" 
+   href="ViewEventsAdmin">
+    <i class="bi bi-calendar-event"></i> Add Events
+</a>
+			<a class="<%= "adminpayments.jsp".equals(currentPage) ? "active-link" : "" %>" href="Admindashboard?page=adminpayments.jsp">
 				<i class="bi bi-clock-history"></i> Payment Received</a>			
             <a href="Logout">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>
-
         </div>
 
         <!-- Main Content -->
@@ -161,21 +165,21 @@ String currentPage = request.getParameter("page");
                 <div class="col-md-4">
                     <div class="stat-card p-3 card-box">
                         <h5>Total Users</h5>
-                        <h3>${sessionScope.totalUsers}</h3>
+                        <h3>${sessionScope.totalUsers != null ? sessionScope.totalUsers : 0}</h3>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="stat-card p-3 card-box">
                         <h5>Active Members</h5>
-                        <h3>${sessionScope.activeMembers}</h3>
+                        <h3>${sessionScope.activeMembers != null ? sessionScope.activeMembers : 0}</h3>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="stat-card p-3 card-box">
                         <h5>Events</h5>
-                        <h3>${eventsCount}</h3>
+                        <h3>${sessionScope.eventsCount != null ? sessionScope.eventsCount : 0}</h3>
                     </div>
                 </div>
 

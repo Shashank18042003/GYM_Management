@@ -1,5 +1,7 @@
 package com.model;
 
+import java.sql.Date;
+
 public class Membership {
 int id;
 public int getId() {
@@ -20,16 +22,16 @@ public String getPlan_name() {
 public void setPlan_name(String plan_name) {
 	this.plan_name = plan_name;
 }
-public String getStart_date() {
+public Date getStart_date() {
 	return start_date;
 }
-public void setStart_date(String start_date) {
+public void setStart_date(Date start_date) {
 	this.start_date = start_date;
 }
-public String getEnd_date() {
+public Date getEnd_date() {
 	return end_date;
 }
-public void setEnd_date(String end_date) {
+public void setEnd_date(Date end_date) {
 	this.end_date = end_date;
 }
 public String getStatus() {
@@ -40,7 +42,7 @@ public void setStatus(String status) {
 }
 int user_id;
 String plan_name;
-String start_date;
-String end_date;
+Date start_date;
+Date end_date;
 String status;
 }

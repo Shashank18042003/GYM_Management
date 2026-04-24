@@ -205,6 +205,10 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
                     <a class="<%= currentPage.equals("profile.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=profile.jsp">Profile</a>
                     <a class="<%= currentPage.equals("membership.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=membership.jsp">Membership</a>
                     <a class="<%= currentPage.equals("payments.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=payments.jsp">Payments</a>
+                    <a href="ViewEventsUser">
+    						<i class="bi bi-calendar-event">
+    				</i> Check Events
+                    </a>
                     <a class="<%= currentPage.equals("rechargeplan.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=rechargeplan.jsp">Recharge</a>
                 </nav>
 
@@ -281,6 +285,6 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

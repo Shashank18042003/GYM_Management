@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.Vector, com.model.Payments, com.model.PaymentsDAO" %>
+<%@ page import="java.util.Vector, com.model.Payments, com.model.PaymentsDAO, com.model.User" %>
 
 <div class="card-box">
 <style>
@@ -18,9 +18,25 @@
 
 <%
 String email = (String) session.getAttribute("email");
+User sUser = (User) session.getAttribute("user");
+if ((email == null || email.trim().isEmpty()) && sUser != null) {
+    email = sUser.getEmail();
+}
 
 PaymentsDAO dao = new PaymentsDAO();
-Vector<Payments> payments = dao.getuserdata(email);
+Integer userId = null;
+Object userIdObj = session.getAttribute("userId");
+if (userIdObj instanceof Integer) {
+    userId = (Integer) userIdObj;
+} else if (userIdObj instanceof String) {
+    try { userId = Integer.parseInt((String) userIdObj); } catch (Exception ignored) {}
+}
+Vector<Payments> payments;
+if (userId != null && userId > 0) {
+    payments = dao.getuserdataByUserId(userId);
+} else {
+    payments = dao.getuserdata(email);
+}
 %>
 
 <% if(payments != null && !payments.isEmpty()){ %>
@@ -43,7 +59,11 @@ Vector<Payments> payments = dao.getuserdata(email);
             <td class="fw-semibold">₹<%= p.getAmount() %></td>
 
             <td>
-                <span class="badge <%= p.getPayment_status().equalsIgnoreCase("Paid") ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger" %>">
+                <%
+                String payStatus = p.getPayment_status() == null ? "" : p.getPayment_status();
+                boolean ok = "PAID".equalsIgnoreCase(payStatus) || "SUCCESS".equalsIgnoreCase(payStatus);
+                %>
+                <span class="badge <%= ok ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger" %>">
                     <%= p.getPayment_status() %>
                 </span>
             </td>

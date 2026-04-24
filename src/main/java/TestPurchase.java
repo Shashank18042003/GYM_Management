@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 
 import com.DBconnection.Myjdbc;
+import com.model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -32,6 +33,14 @@ public class TestPurchase extends HttpServlet {
 		}
 
 		String email = (String) session.getAttribute("email");
+		Integer sessionUserId = null;
+		Object sessionUserObj = session.getAttribute("user");
+		if (sessionUserObj instanceof User) {
+			sessionUserId = ((User) sessionUserObj).getId();
+			if (email == null || email.trim().isEmpty()) {
+				email = ((User) sessionUserObj).getEmail();
+			}
+		}
 		String plan = request.getParameter("plan");
 		String amountStr = request.getParameter("amount");
 		String daysStr = request.getParameter("days");
@@ -56,12 +65,14 @@ public class TestPurchase extends HttpServlet {
 
 		try (Connection con = Myjdbc.myconn()) {
 
-			// 1) Get user_id by email
-			int userId = -1;
-			try (PreparedStatement ps = con.prepareStatement("SELECT id FROM gym_users WHERE email=?")) {
-				ps.setString(1, email);
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) userId = rs.getInt(1);
+			// 1) Get user_id from session first, fallback to email lookup
+			int userId = (sessionUserId != null && sessionUserId > 0) ? sessionUserId : -1;
+			if (userId == -1 && email != null && !email.trim().isEmpty()) {
+				try (PreparedStatement ps = con.prepareStatement("SELECT id FROM gym_users WHERE email=?")) {
+					ps.setString(1, email);
+					try (ResultSet rs = ps.executeQuery()) {
+						if (rs.next()) userId = rs.getInt(1);
+					}
 				}
 			}
 			if (userId == -1) {
@@ -84,7 +95,7 @@ public class TestPurchase extends HttpServlet {
 			// 3) Insert payment
 			try (PreparedStatement ps = con.prepareStatement(
 					"INSERT INTO payments (user_id, amount, payment_date, payment_status, payment_method) "
-							+ "VALUES (?, ?, CURDATE(), 'Paid', 'Test')")) {
+							+ "VALUES (?, ?, CURDATE(), 'SUCCESS', 'TEST')")) {
 				ps.setInt(1, userId);
 				ps.setDouble(2, amount);
 				ps.executeUpdate();

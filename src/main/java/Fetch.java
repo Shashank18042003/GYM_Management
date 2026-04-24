@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.util.Vector;
 
 import com.model.AdminUserRow;
+import com.model.EventDAO;
+import com.model.MembershipDAO;
 import com.model.UserDAO;
 
 import jakarta.servlet.RequestDispatcher;
@@ -9,16 +11,29 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class Fetch extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        HttpSession hs = request.getSession(false);
+        if (hs == null || hs.getAttribute("userId") == null) {
+            response.sendRedirect("login.html");
+            return;
+        }
+
         UserDAO dao = new UserDAO();
 
         // Fetch users from DB
         Vector<AdminUserRow> users = dao.fetch();
+
+        MembershipDAO membershipDAO = new MembershipDAO();
+        EventDAO eventDAO = new EventDAO();
+        hs.setAttribute("totalUsers", dao.userCount());
+        hs.setAttribute("activeMembers", membershipDAO.MemberCount());
+        request.setAttribute("eventsCount", eventDAO.viewEvent().size());
 
         // Send data to JSP
         request.setAttribute("users", users);

@@ -2,6 +2,7 @@ package com.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.Vector;
 
 import javax.sql.rowset.JdbcRowSet;
@@ -26,8 +27,13 @@ public class UserDAO implements ProjectDesign{
 				u.setId(jrs.getInt("id"));
 				u.setUsername(jrs.getString("username"));
 				u.setEmail(jrs.getString("email"));
+				u.setPassword(jrs.getString("password"));
 				u.setPhone(jrs.getString("phone"));
-
+				u.setDoj(jrs.getDate("doj"));
+				u.setDob(jrs.getDate("dob"));
+				u.setHeight(jrs.getInt("height"));
+				u.setWeight(jrs.getInt("weight"));
+				u.setProfilePic(jrs.getString("profile_pic")); 
 				return u;
 			}
 		}
@@ -37,34 +43,34 @@ public class UserDAO implements ProjectDesign{
 		}
 		return null;
 	}
+@Override
+	public int register(User u){
+	    int r = 0;
+	    try{
+	        Connection con = Myjdbc.myconn();
 
-	@Override
-	public int register(User user) {
-		int r=0;
-		Connection connection=Myjdbc.myconn();
-		try {
-			
-			PreparedStatement preparedStatement=connection.prepareStatement("insert into gym_users (Username, email, password, age, gender, phone, address, weight, height, doj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			preparedStatement.setString(1,user.getUsername() );
-			preparedStatement.setString(2,user.getEmail() );
-			preparedStatement.setString(3,user.getPassword() );
-			preparedStatement.setInt(4,user.getAge() );
-			preparedStatement.setString(5,user.getGender() );
-			preparedStatement.setString(6,user.getPhone() );
-			preparedStatement.setString(7,user.getAddress() );
-			preparedStatement.setInt(8,user.getWeight() );
-			preparedStatement.setInt(9,user.getHeight() );
-			preparedStatement.setString(10,user.getDoj() );
-			r=preparedStatement.executeUpdate();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return r;
+	        PreparedStatement ps = con.prepareStatement(
+	        		"INSERT INTO gym_users(username,email,password,phone,gender,dob,weight,height,profile_pic,doj,address) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+
+	        		ps.setString(1, u.getUsername());
+	        		ps.setString(2, u.getEmail());
+	        		ps.setString(3, u.getPassword());
+	        		ps.setString(4, u.getPhone());     // ✅ correct
+	        		ps.setString(5, u.getGender()); 
+	        		if(u.getDob() != null)
+	        		    ps.setDate(6, u.getDob());// ✅ correct
+	        		ps.setInt(7, u.getWeight());
+	        		ps.setInt(8, u.getHeight());
+	        		ps.setString(9, u.getProfilePic());
+	        		ps.setDate(10, java.sql.Date.valueOf(LocalDate.now()));
+	        		ps.setString(11,u.getAddress());
+
+	        r = ps.executeUpdate();
+
+	    }catch(Exception e){ e.printStackTrace(); }
+
+	    return r;
 	}
-	
-
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
@@ -194,13 +200,13 @@ public class UserDAO implements ProjectDesign{
 	            user.setEmail(jrs.getString("email"));
 	            user.setUsername(jrs.getString("username"));
 	            user.setPassword(jrs.getString("password"));
-	            user.setAge(jrs.getInt("age"));
+	            user.setDob(jrs.getDate("dob"));
 	            user.setGender(jrs.getString("gender"));
 	            user.setPhone(jrs.getString("phone"));
 	            user.setAddress(jrs.getString("address"));
 	            user.setWeight(jrs.getInt("weight"));
 	            user.setHeight(jrs.getInt("height"));
-	            user.setDoj(jrs.getString("doj"));
+	            user.setDoj(jrs.getDate("doj"));
 	        }
 
 	    } catch (Exception e) {
@@ -240,19 +246,45 @@ public class UserDAO implements ProjectDesign{
 	        Connection con = Myjdbc.myconn();
 
 	        PreparedStatement ps = con.prepareStatement(
-	            "UPDATE gym_users SET username=?, password=?, age=?, gender=?, phone=?, address=?, weight=?, height=?, doj=? WHERE email=?"
+	            "UPDATE gym_users SET username=?, password=?, dob=?, gender=?, phone=?, address=?, weight=?, height=?, doj=?, profile_pic=? WHERE email=?"
 	        );
 
 	        ps.setString(1, user.getUsername());
 	        ps.setString(2, user.getPassword());
-	        ps.setInt(3, user.getAge());
+	        ps.setDate(3, user.getDob());
 	        ps.setString(4, user.getGender());
 	        ps.setString(5, user.getPhone());
 	        ps.setString(6, user.getAddress());
 	        ps.setInt(7, user.getWeight());
 	        ps.setInt(8, user.getHeight());
-	        ps.setString(9, user.getDoj());
-	        ps.setString(10, user.getEmail());
+	        ps.setDate(9, user.getDoj());
+	        ps.setString(10, user.getProfilePic());
+	        ps.setString(11, user.getEmail());
+	        ps.executeUpdate();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	@Override
+	public void updateUserProfile(User user) {
+
+	    try {
+	        Connection con = Myjdbc.myconn();
+
+	        PreparedStatement ps = con.prepareStatement(
+	            "UPDATE gym_users SET username=?, password=?, dob=?, phone=?, address=?, weight=?, height=?, profile_pic=? WHERE email=?"
+	        );
+
+	        ps.setString(1, user.getUsername());
+	        ps.setString(2, user.getPassword());
+	        ps.setDate(3, user.getDob());
+	        ps.setString(4, user.getPhone());
+	        ps.setString(5, user.getAddress());
+	        ps.setInt(6, user.getWeight());
+	        ps.setInt(7, user.getHeight());
+	        ps.setString(8, user.getProfilePic());
+	        ps.setString(9, user.getEmail());
 
 	        ps.executeUpdate();
 
@@ -260,7 +292,6 @@ public class UserDAO implements ProjectDesign{
 	        e.printStackTrace();
 	    }
 	}
-
 	@Override
 	public void delete(String email) {
 		 

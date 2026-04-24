@@ -9,7 +9,7 @@ void update();
 void delete();
 Vector<AdminUserRow> fetch();
 int userCount();
-
+public void updateUserProfile(User user);
 public User getUserByEmail(String email);
 public void updateUserByEmail(User user);
 void delete(String email);

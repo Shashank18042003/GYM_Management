@@ -94,6 +94,55 @@
   </servlet-mapping>
   
   
+  <servlet>
+    <servlet-name>DeleteEvent</servlet-name>
+    <servlet-class>DeleteEvent</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>DeleteEvent</servlet-name>
+    <url-pattern>/DeleteEvent</url-pattern>
+</servlet-mapping>
+
+
+<servlet>
+    <servlet-name>AddEvent</servlet-name>
+    <servlet-class>AddEvent</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>AddEvent</servlet-name>
+    <url-pattern>/AddEvent</url-pattern>
+</servlet-mapping>
   
+  <servlet>
+    <servlet-name>ViewEventsAdmin</servlet-name>
+    <servlet-class>ViewEventsAdmin</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>ViewEventsAdmin</servlet-name>
+    <url-pattern>/ViewEventsAdmin</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>ViewEventsUser</servlet-name>
+    <servlet-class>ViewEventsUser</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>ViewEventsUser</servlet-name>
+    <url-pattern>/ViewEventsUser</url-pattern>
+</servlet-mapping>
+  
+<servlet>
+    <servlet-name>UpdateProfile</servlet-name>
+    <servlet-class>UpdateProfile</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>UpdateProfile</servlet-name>
+    <url-pattern>/UpdateProfile</url-pattern>
+</servlet-mapping>
   
 </web-app>

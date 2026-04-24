@@ -1,55 +1,78 @@
 import java.io.IOException;
+import java.sql.Date;
 
 import com.model.User;
 import com.model.UserDAO;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 public class Update extends HttpServlet {
 
-    // Show update form using JSP
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-    	String email = request.getParameter("email");
-    	UserDAO dao = new UserDAO();
-    	User user = dao.getUserByEmail(email);
+        String email = request.getParameter("email");
 
-    	if (user != null) {
-    		request.setAttribute("user", user);
-    		RequestDispatcher rd = request.getRequestDispatcher("updateuser.jsp");
-    		rd.forward(request, response);
-    	} else {
-    		response.setContentType("text/plain");
-    		response.getWriter().println("User not found");
-    	}
+        UserDAO dao = new UserDAO();
+        User user = dao.getUserByEmail(email);
+
+        request.setAttribute("user", user);
+        request.getRequestDispatcher("admindashboard.jsp?page=updateuser.jsp")
+               .forward(request, response);
     }
 
-    // Update logic
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-    	String email = request.getParameter("email");
+        String email = request.getParameter("email");
 
-    	User user = new User();
-    	user.setEmail(email);
-    	user.setUsername(request.getParameter("username"));
-    	user.setPassword(request.getParameter("password"));
-    	user.setAge(Integer.parseInt(request.getParameter("age")));
-    	user.setGender(request.getParameter("gender"));
-    	user.setPhone(request.getParameter("phone"));
-    	user.setAddress(request.getParameter("address"));
-    	user.setWeight(Integer.parseInt(request.getParameter("weight")));
-    	user.setHeight(Integer.parseInt(request.getParameter("height")));
-    	user.setDoj(request.getParameter("doj"));
+        // DATE SAFE
+        Date dob = null, doj = null;
+        try {
+            String d = request.getParameter("dob");
+            if (d != null && !d.isBlank()) dob = Date.valueOf(d);
+        } catch (Exception ignored) {}
 
-    	UserDAO dao = new UserDAO();
-    	dao.updateUserByEmail(user);
+        try {
+            String j = request.getParameter("doj");
+            if (j != null && !j.isBlank()) doj = Date.valueOf(j);
+        } catch (Exception ignored) {}
 
-    	response.sendRedirect("Fetch");
-  }
+        // NUMBER SAFE
+        int weight = 0, height = 0;
+        try {
+            String w = request.getParameter("weight");
+            if (w != null && !w.isBlank()) weight = Integer.parseInt(w);
+        } catch (Exception ignored) {}
+
+        try {
+            String h = request.getParameter("height");
+            if (h != null && !h.isBlank()) height = Integer.parseInt(h);
+        } catch (Exception ignored) {}
+
+        // PASSWORD SAFE
+        String password = request.getParameter("password");
+
+        User user = new User();
+        user.setEmail(email);
+        user.setUsername(request.getParameter("username"));
+
+        if (password != null && !password.isBlank()) {
+            user.setPassword(password);
+        }
+
+        user.setDob(dob);
+        user.setGender(request.getParameter("gender"));
+        user.setPhone(request.getParameter("phone"));
+        user.setAddress(request.getParameter("address"));
+        user.setWeight(weight);
+        user.setHeight(height);
+        user.setDoj(doj);
+
+        UserDAO dao = new UserDAO();
+        dao.updateUserByEmail(user);
+
+        response.sendRedirect("Fetch");
+    }
 }

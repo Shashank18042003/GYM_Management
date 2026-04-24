@@ -1,14 +1,34 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.model.MembershipDAO, com.model.Membership" %>
+<%@ page import="com.model.MembershipDAO, com.model.Membership, com.model.User" %>
 
 <%
 String email = (String) session.getAttribute("email");
+User sUser = (User) session.getAttribute("user");
+if ((email == null || email.trim().isEmpty()) && sUser != null) {
+    email = sUser.getEmail();
+}
 
 MembershipDAO dao = new MembershipDAO();
 Membership m = null;
+Integer userId = null;
+Object userIdObj = session.getAttribute("userId");
+if (userIdObj instanceof Integer) {
+    userId = (Integer) userIdObj;
+} else if (userIdObj instanceof String) {
+    try { userId = Integer.parseInt((String) userIdObj); } catch (Exception ignored) {}
+}
+if ((userId == null || userId <= 0) && sUser != null && sUser.getId() > 0) {
+    userId = sUser.getId();
+}
 
-if(email != null){
-    m = dao.getMembershipByEmail(email);
+try {
+    if(userId != null && userId > 0){
+        m = dao.getMembershipByUserId(userId);
+    } else if(email != null){
+        m = dao.getMembershipByEmail(email);
+    }
+} catch (Exception ignored) {
+    m = null;
 }
 
 String status = "NO PLAN";
@@ -16,26 +36,28 @@ long days = 0;
 long totalDays = 30; // default
 
 if(m != null){
+    try {
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.sql.Date endDate = m.getEnd_date();
+        java.sql.Date startDate = m.getStart_date();
+        if (endDate == null || startDate == null) {
+            throw new IllegalStateException("Membership dates are missing");
+        }
+        java.time.LocalDate end = endDate.toLocalDate();
+        java.time.LocalDate start = startDate.toLocalDate();
 
-    java.time.LocalDate today = java.time.LocalDate.now();
+        days = java.time.temporal.ChronoUnit.DAYS.between(today, end);
+        totalDays = java.time.temporal.ChronoUnit.DAYS.between(start, end);
 
-    String rawDate = m.getEnd_date();
-    String cleanDate = rawDate.split(" ")[0];
-
-    java.time.LocalDate end = java.time.LocalDate.parse(cleanDate);
-
-    String rawStart = m.getStart_date();
-    String cleanStart = rawStart.split(" ")[0];
-
-    java.time.LocalDate start = java.time.LocalDate.parse(cleanStart);
-
-    days = java.time.temporal.ChronoUnit.DAYS.between(today, end);
-    totalDays = java.time.temporal.ChronoUnit.DAYS.between(start, end);
-
-    if(days >= 0){
-        status = "ACTIVE";
-    } else {
-        status = "EXPIRED";
+        if(days >= 0){
+            status = "ACTIVE";
+        } else {
+            status = "EXPIRED";
+        }
+    } catch (Exception ignored) {
+        status = "NO PLAN";
+        days = 0;
+        totalDays = 30;
     }
 }
 
@@ -92,12 +114,12 @@ if(totalDays > 0 && days > 0){
 
         <div class="col-md-4">
             <p class="text-muted mb-1">Start</p>
-            <strong><%= (m != null) ? m.getStart_date() : "-" %></strong>
+            <strong><%= (m != null && m.getStart_date() != null) ? m.getStart_date().toLocalDate() : "-" %></strong>
         </div>
 
         <div class="col-md-4">
             <p class="text-muted mb-1">Expiry</p>
-            <strong><%= (m != null) ? m.getEnd_date() : "-" %></strong>
+            <strong><%= (m != null && m.getEnd_date() != null) ? m.getEnd_date().toLocalDate() : "-" %></strong>
         </div>
 
     </div>
@@ -110,8 +132,8 @@ if(totalDays > 0 && days > 0){
                 Renew Membership
             </a>
         <% } else { %>
-            <a href="RenewPlan" class="btn btn-danger px-4">
-                Activate Plan
+            <a href="userdashboard.jsp?page=rechargeplan.jsp" class="btn btn-danger px-4">
+                View Recharge Plans
             </a>
         <% } %>
 

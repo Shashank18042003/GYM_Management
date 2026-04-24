@@ -27,6 +27,9 @@ public class MembershipDAO implements MembershipDesign {
 	@Override
 	public Membership getMembershipByEmail(String email) {
 	    Membership m = null;
+	    if (email == null || email.trim().isEmpty()) {
+	    	return null;
+	    }
 
 	    try {
 	        JdbcRowSet jrs = MyrowSet.Myrowset();
@@ -46,8 +49,8 @@ public class MembershipDAO implements MembershipDesign {
 	        if (jrs.next()) {
 	            m = new Membership();
 	            m.setPlan_name(jrs.getString("plan_name"));
-	            m.setStart_date(jrs.getString("start_date"));
-	            m.setEnd_date(jrs.getString("end_date"));
+	            m.setStart_date(jrs.getDate("start_date"));
+	            m.setEnd_date(jrs.getDate("end_date"));
 	            m.setStatus(jrs.getString("status"));
 	        }
 
@@ -55,6 +58,35 @@ public class MembershipDAO implements MembershipDesign {
 	        e.printStackTrace();
 	    }
 
+	    return m;
+	}
+
+	public Membership getMembershipByUserId(int userId) {
+	    Membership m = null;
+	    if (userId <= 0) {
+	    	return null;
+	    }
+	    try {
+	        JdbcRowSet jrs = MyrowSet.Myrowset();
+	        jrs.setCommand(
+	            "SELECT plan_name, start_date, end_date, status " +
+	            "FROM membership " +
+	            "WHERE user_id = ? " +
+	            "ORDER BY end_date DESC " +
+	            "LIMIT 1"
+	        );
+	        jrs.setInt(1, userId);
+	        jrs.execute();
+	        if (jrs.next()) {
+	            m = new Membership();
+	            m.setPlan_name(jrs.getString("plan_name"));
+	            m.setStart_date(jrs.getDate("start_date"));
+	            m.setEnd_date(jrs.getDate("end_date"));
+	            m.setStatus(jrs.getString("status"));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	    return m;
 	}
 }

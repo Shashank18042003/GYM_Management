@@ -50,7 +50,11 @@ Vector<Payments> payments = dao.getallpayments();
             <td class="fw-semibold">₹<%= p.getAmount() %></td>
 
             <td>
-                <span class="badge <%= p.getPayment_status().equalsIgnoreCase("Paid") ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger" %>">
+                <%
+                String payStatus = p.getPayment_status() == null ? "" : p.getPayment_status();
+                boolean ok = "PAID".equalsIgnoreCase(payStatus) || "SUCCESS".equalsIgnoreCase(payStatus);
+                %>
+                <span class="badge <%= ok ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger" %>">
                     <%= p.getPayment_status() %>
                 </span>
             </td>
