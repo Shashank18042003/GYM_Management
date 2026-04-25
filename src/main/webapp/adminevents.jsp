@@ -1,4 +1,4 @@
-<%@ page import="java.util.*, com.model.EventData" %>
+<%@ page import="java.util.*, com.gym.model.EventData" %>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="card-box">

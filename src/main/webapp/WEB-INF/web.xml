@@ -1,148 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" version="4.0">
-  <display-name>GYM_Membership</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
-  
-  <servlet>
-  <servlet-name>Login</servlet-name>
-  <servlet-class>Login</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Login</servlet-name>
-  <url-pattern>/Login</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-  <servlet-name>Register</servlet-name>
-  <servlet-class>Register</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Register</servlet-name>
-  <url-pattern>/Register</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-  <servlet-name>Fetch</servlet-name>
-  <servlet-class>Fetch</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Fetch</servlet-name>
-  <url-pattern>/Fetch</url-pattern>
-  </servlet-mapping>
-  
-   <servlet>
-  <servlet-name>Admindashboard</servlet-name>
-  <servlet-class>Admindashboard</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Admindashboard</servlet-name>
-  <url-pattern>/Admindashboard</url-pattern>
-  </servlet-mapping>
-  
-  
-   <servlet>
-    <servlet-name>Update</servlet-name>
-  <servlet-class>Update</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Update</servlet-name>
-  <url-pattern>/Update</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-    <servlet-name>Delete</servlet-name>
-  <servlet-class>Delete</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Delete</servlet-name>
-  <url-pattern>/Delete</url-pattern>
-  </servlet-mapping>
 
-  <servlet>
-    <servlet-name>Logout</servlet-name>
-  <servlet-class>Logout</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>Logout</servlet-name>
-  <url-pattern>/Logout</url-pattern>
-  </servlet-mapping>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
 
-  
-   <servlet>
-    <servlet-name>UserDashboard</servlet-name>
-  <servlet-class>UserDashboard</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  <servlet-name>UserDashboard</servlet-name>
-  <url-pattern>/UserDashboard</url-pattern>
-  </servlet-mapping>
+    <display-name>GYM_Membership</display-name>
 
-  <servlet>
-    <servlet-name>TestPurchase</servlet-name>
-    <servlet-class>TestPurchase</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>TestPurchase</servlet-name>
-    <url-pattern>/TestPurchase</url-pattern>
-  </servlet-mapping>
-  
-  
-  <servlet>
-    <servlet-name>DeleteEvent</servlet-name>
-    <servlet-class>DeleteEvent</servlet-class>
-</servlet>
+    <!-- ✅ WELCOME PAGE -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 
-<servlet-mapping>
-    <servlet-name>DeleteEvent</servlet-name>
-    <url-pattern>/DeleteEvent</url-pattern>
-</servlet-mapping>
+    <!-- ================= SERVLETS ================= -->
 
+    <!-- LOGIN -->
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>com.gym.servlet.Login</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>AddEvent</servlet-name>
-    <servlet-class>AddEvent</servlet-class>
-</servlet>
+    <!-- REGISTER -->
+    <servlet>
+        <servlet-name>Register</servlet-name>
+        <servlet-class>com.gym.servlet.Register</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Register</servlet-name>
+        <url-pattern>/Register</url-pattern>
+    </servlet-mapping>
 
-<servlet-mapping>
-    <servlet-name>AddEvent</servlet-name>
-    <url-pattern>/AddEvent</url-pattern>
-</servlet-mapping>
-  
-  <servlet>
-    <servlet-name>ViewEventsAdmin</servlet-name>
-    <servlet-class>ViewEventsAdmin</servlet-class>
-</servlet>
+    <!-- FETCH -->
+    <servlet>
+        <servlet-name>Fetch</servlet-name>
+        <servlet-class>com.gym.servlet.Fetch</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Fetch</servlet-name>
+        <url-pattern>/Fetch</url-pattern>
+    </servlet-mapping>
 
-<servlet-mapping>
-    <servlet-name>ViewEventsAdmin</servlet-name>
-    <url-pattern>/ViewEventsAdmin</url-pattern>
-</servlet-mapping>
+    <!-- ADMIN DASHBOARD -->
+    <servlet>
+        <servlet-name>Admindashboard</servlet-name>
+        <servlet-class>com.gym.servlet.Admindashboard</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Admindashboard</servlet-name>
+        <url-pattern>/Admindashboard</url-pattern>
+    </servlet-mapping>
 
-<servlet>
-    <servlet-name>ViewEventsUser</servlet-name>
-    <servlet-class>ViewEventsUser</servlet-class>
-</servlet>
+    <!-- UPDATE -->
+    <servlet>
+        <servlet-name>Update</servlet-name>
+        <servlet-class>com.gym.servlet.Update</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Update</servlet-name>
+        <url-pattern>/Update</url-pattern>
+    </servlet-mapping>
 
-<servlet-mapping>
-    <servlet-name>ViewEventsUser</servlet-name>
-    <url-pattern>/ViewEventsUser</url-pattern>
-</servlet-mapping>
-  
-<servlet>
-    <servlet-name>UpdateProfile</servlet-name>
-    <servlet-class>UpdateProfile</servlet-class>
-</servlet>
+    <!-- DELETE -->
+    <servlet>
+        <servlet-name>Delete</servlet-name>
+        <servlet-class>com.gym.servlet.Delete</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Delete</servlet-name>
+        <url-pattern>/Delete</url-pattern>
+    </servlet-mapping>
 
-<servlet-mapping>
-    <servlet-name>UpdateProfile</servlet-name>
-    <url-pattern>/UpdateProfile</url-pattern>
-</servlet-mapping>
-  
+    <!-- LOGOUT -->
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>com.gym.servlet.Logout</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+
+    <!-- USER DASHBOARD -->
+    <servlet>
+        <servlet-name>UserDashboard</servlet-name>
+        <servlet-class>com.gym.servlet.UserDashboard</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserDashboard</servlet-name>
+        <url-pattern>/UserDashboard</url-pattern>
+    </servlet-mapping>
+
+    <!-- TEST PURCHASE -->
+    <servlet>
+        <servlet-name>TestPurchase</servlet-name>
+        <servlet-class>com.gym.servlet.TestPurchase</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestPurchase</servlet-name>
+        <url-pattern>/TestPurchase</url-pattern>
+    </servlet-mapping>
+
+    <!-- ADD EVENT -->
+    <servlet>
+        <servlet-name>AddEvent</servlet-name>
+        <servlet-class>com.gym.servlet.AddEvent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddEvent</servlet-name>
+        <url-pattern>/AddEvent</url-pattern>
+    </servlet-mapping>
+
+    <!-- DELETE EVENT -->
+    <servlet>
+        <servlet-name>DeleteEvent</servlet-name>
+        <servlet-class>com.gym.servlet.DeleteEvent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteEvent</servlet-name>
+        <url-pattern>/DeleteEvent</url-pattern>
+    </servlet-mapping>
+
+    <!-- VIEW EVENTS ADMIN -->
+    <servlet>
+        <servlet-name>ViewEventsAdmin</servlet-name>
+        <servlet-class>com.gym.servlet.ViewEventsAdmin</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewEventsAdmin</servlet-name>
+        <url-pattern>/ViewEventsAdmin</url-pattern>
+    </servlet-mapping>
+
+    <!-- VIEW EVENTS USER -->
+    <servlet>
+        <servlet-name>ViewEventsUser</servlet-name>
+        <servlet-class>com.gym.servlet.ViewEventsUser</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewEventsUser</servlet-name>
+        <url-pattern>/ViewEventsUser</url-pattern>
+    </servlet-mapping>
+
+    <!-- UPDATE PROFILE -->
+    <servlet>
+        <servlet-name>UpdateProfile</servlet-name>
+        <servlet-class>com.gym.servlet.UpdateProfile</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfile</servlet-name>
+        <url-pattern>/UpdateProfile</url-pattern>
+    </servlet-mapping>
+
 </web-app>

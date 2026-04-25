@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.model.MembershipView, com.model.Membership" %>
+<%@ page import="com.gym.model.MembershipView, com.gym.model.Membership" %>
 
 <%
 MembershipView membershipView = (MembershipView) request.getAttribute("membershipView");

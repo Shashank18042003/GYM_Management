@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.Vector, com.model.Payments, com.model.PaymentsDAO" %>
+<%@ page import="java.util.Vector, com.gym.model.Payments, com.gym.dao.PaymentsDAO" %>
 
 <div class="card-box">
 <style>

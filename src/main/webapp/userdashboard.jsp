@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
-<%@ page import="com.model.MembershipView" %>
+<%@ page import="com.gym.model.MembershipView" %>
 
 <%
 String currentPage = request.getParameter("page");
@@ -300,17 +300,17 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+
+
+
 <script>
 function pay(plan, amount, days) {
 
-    console.log("Clicked:", plan);
-
     fetch("CreateOrder?amount=" + amount)
-    .then(res => res.json()).then(res => res.text())
-    .then(data => {
-        console.log("SERVER RESPONSE:", data);
-    })
+    .then(res => res.json())
     .then(order => {
+
+        let isHandled = false; // 🔥 prevent duplicate calls
 
         var options = {
             key: "rzp_test_ShYQR0oAoEClXB",
@@ -320,32 +320,70 @@ function pay(plan, amount, days) {
             description: plan + " Plan",
             order_id: order.id,
 
+            // ✅ SUCCESS
             handler: function (response) {
+                if(isHandled) return;
+                isHandled = true;
 
-                fetch("VerifyPayment", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body:
-                        "payment_id=" + response.razorpay_payment_id +
-                        "&order_id=" + response.razorpay_order_id +
-                        "&signature=" + response.razorpay_signature +
-                        "&plan=" + plan +
-                        "&amount=" + amount +
-                        "&days=" + days
-                })
-                .then(res => res.text())
-                .then(msg => {
-                    alert(msg);
-                    window.location = "UserDashboard?page=membership.jsp";
-                });
+                sendToServer({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                }, plan, amount, days, "SUCCESS");
             }
         };
 
-        new Razorpay(options).open();
+        var rzp = new Razorpay(options);
+
+        // ❌ FAILED
+        rzp.on("payment.failed", function (response) {
+
+            if(isHandled) return;
+            isHandled = true;
+
+            console.log("FAILED:", response.error);
+
+            sendToServer({
+                razorpay_payment_id: "FAILED_" + Date.now(),
+                razorpay_order_id: order.id,
+                razorpay_signature: "NA"
+            }, plan, amount, days, "FAILED");
+        });
+
+        rzp.open();
+    });
+}
+
+
+// 🔥 COMMON FUNCTION
+function sendToServer(res, plan, amount, days, status) {
+
+    fetch("VerifyPayment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body:
+            "payment_id=" + encodeURIComponent(res.razorpay_payment_id) +
+            "&order_id=" + encodeURIComponent(res.razorpay_order_id) +
+            "&signature=" + encodeURIComponent(res.razorpay_signature) +
+            "&plan=" + encodeURIComponent(plan) +
+            "&amount=" + encodeURIComponent(amount) +
+            "&days=" + encodeURIComponent(days) +
+            "&status=" + encodeURIComponent(status)
     })
-    .catch(err => console.error(err));
+    .then(r => r.text())
+    .then(msg => {
+
+        console.log("SERVER:", msg);
+
+        if(status === "SUCCESS"){
+            alert("Payment Successful ✅");
+            window.location = "UserDashboard?page=membership.jsp";
+        } else {
+            alert("Payment Failed ❌ (Recorded)");
+        }
+    });
 }
 </script>
 </body>

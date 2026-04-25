@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.Vector, com.model.AdminUserRow" %>
+<%@ page import="java.util.Vector, com.gym.model.AdminUserRow" %>
 
 <div class="container">
 

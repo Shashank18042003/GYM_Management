@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.*, com.model.EventData" %>
+<%@ page import="java.util.*, com.gym.model.EventData" %>
 
 <!DOCTYPE html>
 <html lang="en">

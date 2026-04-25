@@ -17,7 +17,7 @@
     <div class="text-center mb-4">
 
         <%
-        com.model.User sUser = (com.model.User) session.getAttribute("user");
+        com.gym.model.User sUser = (com.gym.model.User) session.getAttribute("user");
         String pic = (sUser != null) ? sUser.getProfilePic() : null;
         String picPath = "images/default.png";
         if (pic != null && !pic.isBlank()) {

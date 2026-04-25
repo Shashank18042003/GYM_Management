@@ -133,7 +133,7 @@ if (currentPage == null || currentPage.trim().isEmpty()) {
 
             <h4 class="text-center mb-4">Admin Panel</h4>
 
-            <a class="<%= "userregister.jsp".equals(currentPage) ? "active-link" : "" %>" href="Admindashboard?page=userregister.jsp">
+            <a class="<%= "userregister.jsp".equals(currentPage) ? "active-link" : "" %>" href="Admindashboard?page=userregister.jsp?embed=true">
                 <i class="bi bi-person-plus"></i> User Register
             </a>
 
