@@ -22,9 +22,7 @@ CREATE TABLE payments (
     payment_id VARCHAR(100),
     order_id VARCHAR(100),
     status VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (user_id) REFERENCES gym_users(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES gym_users(id)
 );
 
 
@@ -34,7 +32,5 @@ CREATE TABLE membership (
     plan_name VARCHAR(50),
     start_date DATE,
     end_date DATE,
-    status VARCHAR(20),
-
-    FOREIGN KEY (user_id) REFERENCES gym_users(id)
+    status VARCHAR(20),FOREIGN KEY (user_id) REFERENCES gym_users(id)
 );
