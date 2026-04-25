@@ -1,8 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page import="com.model.MembershipView" %>
 
 <%
 String currentPage = request.getParameter("page");
 if(currentPage == null) currentPage = "profile.jsp";
+MembershipView membershipView = (MembershipView) request.getAttribute("membershipView");
+if (membershipView == null) {
+    membershipView = MembershipView.noPlan();
+}
+String flashMessage = (String) session.getAttribute("flashMessage");
+if (flashMessage != null) {
+    session.removeAttribute("flashMessage");
+}
 
 String sectionLabel = "Profile";
 if("membership.jsp".equals(currentPage)) sectionLabel = "Membership";
@@ -191,6 +200,9 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
 <body class="gym-ui">
 
 <div class="gym-shell">
+    <% if (flashMessage != null) { %>
+        <div class="alert alert-info mb-3" role="alert"><%= flashMessage %></div>
+    <% } %>
     <div class="row g-3">
 
         <!-- SIDEBAR -->
@@ -202,14 +214,14 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
                 </div>
 
                 <nav class="gym-nav">
-                    <a class="<%= currentPage.equals("profile.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=profile.jsp">Profile</a>
-                    <a class="<%= currentPage.equals("membership.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=membership.jsp">Membership</a>
-                    <a class="<%= currentPage.equals("payments.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=payments.jsp">Payments</a>
+                    <a class="<%= currentPage.equals("profile.jsp") ? "gym-active" : "" %>" href="UserDashboard?page=profile.jsp">Profile</a>
+                    <a class="<%= currentPage.equals("membership.jsp") ? "gym-active" : "" %>" href="UserDashboard?page=membership.jsp">Membership</a>
+                    <a class="<%= currentPage.equals("payments.jsp") ? "gym-active" : "" %>" href="UserDashboard?page=payments.jsp">Payments</a>
                     <a href="ViewEventsUser">
     						<i class="bi bi-calendar-event">
     				</i> Check Events
                     </a>
-                    <a class="<%= currentPage.equals("rechargeplan.jsp") ? "gym-active" : "" %>" href="userdashboard.jsp?page=rechargeplan.jsp">Recharge</a>
+                    <a class="<%= currentPage.equals("rechargeplan.jsp") ? "gym-active" : "" %>" href="UserDashboard?page=rechargeplan.jsp">Recharge</a>
                 </nav>
 
                 <hr class="my-3 border-light border-opacity-25">
@@ -236,21 +248,21 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
                         <div class="col-12 col-md-6 col-xl-4">
                             <div class="gym-stat">
                                 <div class="k">Membership Status</div>
-                                <div class="v">${sessionScope.status}</div>
+                                <div class="v"><%= membershipView.getDisplayStatus() %></div>
                             </div>
                         </div>
 
                         <div class="col-12 col-md-6 col-xl-4">
                             <div class="gym-stat">
                                 <div class="k">Days Left</div>
-                                <div class="v">${sessionScope.remainingDays}</div>
+                                <div class="v"><%= membershipView.getDaysRemaining() %></div>
                             </div>
                         </div>
 
                         <div class="col-12 col-md-6 col-xl-4">
                             <div class="gym-stat">
                                 <div class="k">Current Plan</div>
-                                <div class="v">${sessionScope.plan}</div>
+                                <div class="v"><%= membershipView.hasMembership() ? membershipView.getMembership().getPlanName() : "-" %></div>
                             </div>
                         </div>
                     <% } else { %>
@@ -286,5 +298,55 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+function pay(plan, amount, days) {
+
+    console.log("Clicked:", plan);
+
+    fetch("CreateOrder?amount=" + amount)
+    .then(res => res.json()).then(res => res.text())
+    .then(data => {
+        console.log("SERVER RESPONSE:", data);
+    })
+    .then(order => {
+
+        var options = {
+            key: "rzp_test_ShYQR0oAoEClXB",
+            amount: order.amount,
+            currency: "INR",
+            name: "Gym System",
+            description: plan + " Plan",
+            order_id: order.id,
+
+            handler: function (response) {
+
+                fetch("VerifyPayment", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body:
+                        "payment_id=" + response.razorpay_payment_id +
+                        "&order_id=" + response.razorpay_order_id +
+                        "&signature=" + response.razorpay_signature +
+                        "&plan=" + plan +
+                        "&amount=" + amount +
+                        "&days=" + days
+                })
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+                    window.location = "UserDashboard?page=membership.jsp";
+                });
+            }
+        };
+
+        new Razorpay(options).open();
+    })
+    .catch(err => console.error(err));
+}
+</script>
 </body>
 </html>

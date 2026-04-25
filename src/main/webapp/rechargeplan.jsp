@@ -22,13 +22,8 @@
             <h6>Monthly</h6>
             <div class="price text-warning">₹1500</div>
             <p>30 Days</p>
-            <button class="btn btn-warning w-100 buy-btn" onclick="pay(1500)">Buy</button>
-            <form action="TestPurchase" method="post" class="mt-2">
-                <input type="hidden" name="plan" value="Monthly">
-                <input type="hidden" name="amount" value="1500">
-                <input type="hidden" name="days" value="30">
-                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
-            </form>
+            <button class="btn btn-warning w-100 buy-btn" onclick="pay('Monthly',1500,30)">Buy</button>
+           
         </div>
     </div>
 
@@ -39,13 +34,8 @@
             <h6>Quarterly</h6>
             <div class="price text-primary">₹4000</div>
             <p>90 Days</p>
-            <button class="btn btn-primary w-100 buy-btn" onclick="pay(4000)">Buy</button>
-            <form action="TestPurchase" method="post" class="mt-2">
-                <input type="hidden" name="plan" value="Quarterly">
-                <input type="hidden" name="amount" value="4000">
-                <input type="hidden" name="days" value="90">
-                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
-            </form>
+            <button class="btn btn-primary w-100 buy-btn" onclick="pay('Quarterly',4000,90)">Buy</button>
+           
         </div>
     </div>
 
@@ -55,13 +45,8 @@
             <h6>Half-Year</h6>
             <div class="price text-info">₹7500</div>
             <p>180 Days</p>
-            <button class="btn btn-info w-100 buy-btn" onclick="pay(7500)">Buy</button>
-            <form action="TestPurchase" method="post" class="mt-2">
-                <input type="hidden" name="plan" value="Half-Year">
-                <input type="hidden" name="amount" value="7500">
-                <input type="hidden" name="days" value="180">
-                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
-            </form>
+            <button class="btn btn-info w-100 buy-btn" onclick="pay('Half-Year',7500,180)">Buy</button>
+       
         </div>
     </div>
 
@@ -71,13 +56,8 @@
             <h6>Annual</h6>
             <div class="price text-success">₹10000</div>
             <p>365 Days</p>
-            <button class="btn btn-success w-100 buy-btn" onclick="pay(10000)">Buy</button>
-            <form action="TestPurchase" method="post" class="mt-2">
-                <input type="hidden" name="plan" value="Annual">
-                <input type="hidden" name="amount" value="10000">
-                <input type="hidden" name="days" value="365">
-                <button type="submit" class="btn btn-outline-secondary w-100 buy-btn">Test Buy (No Razorpay)</button>
-            </form>
+            <button class="btn btn-success w-100 buy-btn" onclick="pay('Annual',10000,365)">Buy</button>
+            
         </div>
     </div>
 
@@ -101,39 +81,3 @@ function filter(type){
 <!-- Razorpay -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<script>
-function pay(amount) {
-
-    fetch("CreateOrder?amount=" + amount)
-    .then(res => res.json())
-    .then(data => {
-
-        var options = {
-            key: "YOUR_KEY_ID",
-            amount: data.amount,
-            currency: "INR",
-            name: "Gym System",
-            description: "Membership",
-            order_id: data.id,
-
-            handler: function (response) {
-                fetch("VerifyPayment", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body:
-                        "payment_id=" + response.razorpay_payment_id +
-                        "&order_id=" + response.razorpay_order_id +
-                        "&signature=" + response.razorpay_signature
-                });
-
-                alert("Payment Successful");
-                location.reload();
-            }
-        };
-
-        new Razorpay(options).open();
-    });
-}
-</script>

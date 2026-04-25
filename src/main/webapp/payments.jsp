@@ -48,7 +48,7 @@ if (userId != null && userId > 0) {
                 <th>Amount</th>
                 <th>Status</th>
                 <th>Date</th>
-                <th>Method</th>
+                <th>Payment Id</th>
             </tr>
         </thead>
         <tbody>
@@ -70,7 +70,7 @@ if (userId != null && userId > 0) {
 
             <td><%= p.getPayment_date() %></td>
 
-            <td><%= p.getPayment_method() %></td>
+            <td><%= p.getPaymentId() != null ? p.getPaymentId() : "-" %></td>
         </tr>
 
         <% } %>

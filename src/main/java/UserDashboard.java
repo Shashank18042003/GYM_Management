@@ -1,5 +1,8 @@
 import java.io.IOException;
 
+import com.model.MembershipDAO;
+import com.model.MembershipView;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +21,25 @@ public class UserDashboard extends HttpServlet {
             response.sendRedirect("login.html");
             return;
         }
-       
-        	request.getRequestDispatcher("userdashboard.jsp")
-            .forward(request, response);
+        Object userIdObj = session.getAttribute("userId");
+        Integer userId = null;
+        if (userIdObj instanceof Integer) {
+        	userId = (Integer) userIdObj;
+        } else if (userIdObj instanceof String) {
+        	try {
+        		userId = Integer.parseInt((String) userIdObj);
+        	} catch (NumberFormatException ignored) {
+        		userId = null;
+        	}
+        }
+
+        MembershipView membershipView = MembershipView.noPlan();
+        if (userId != null && userId > 0) {
+        	membershipView = new MembershipDAO().getMembershipView(userId);
+        }
+        request.setAttribute("membershipView", membershipView);
+
+        request.getRequestDispatcher("userdashboard.jsp").forward(request, response);
 
         
     }

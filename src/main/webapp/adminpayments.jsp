@@ -38,7 +38,7 @@ Vector<Payments> payments = dao.getallpayments();
                 <th>Amount</th>
                 <th>Status</th>
                 <th>Date</th>
-                <th>Method</th>
+                <th>Payment Id</th>
             </tr>
         </thead>
         <tbody>
@@ -61,7 +61,7 @@ Vector<Payments> payments = dao.getallpayments();
 
             <td><%= p.getPayment_date() %></td>
 
-            <td><%= p.getPayment_method() %></td>
+            <td><%= p.getPaymentId() != null ? p.getPaymentId() : "-" %></td>
         </tr>
 
         <% } %>

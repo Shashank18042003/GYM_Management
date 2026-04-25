@@ -33,7 +33,8 @@ public class ExportPayments extends HttpServlet {
         header.createCell(1).setCellValue("Amount");
         header.createCell(2).setCellValue("Status");
         header.createCell(3).setCellValue("Date");
-        header.createCell(4).setCellValue("Method");
+        header.createCell(4).setCellValue("Payment ID");
+        header.createCell(5).setCellValue("Order ID");
 
         // 🔥 DATA
         for (Payments p : list) {
@@ -43,9 +44,10 @@ public class ExportPayments extends HttpServlet {
                 p.getEmail() != null ? p.getEmail() : "-"
             );
             row.createCell(1).setCellValue(p.getAmount());
-            row.createCell(2).setCellValue(p.getPayment_status());
-            row.createCell(3).setCellValue(p.getPayment_date());
-            row.createCell(4).setCellValue(p.getPayment_method());
+            row.createCell(2).setCellValue(p.getStatus());
+            row.createCell(3).setCellValue(p.getCreatedAt());
+            row.createCell(4).setCellValue(p.getPaymentId());
+            row.createCell(5).setCellValue(p.getOrderId());
         }
 
         // 🔥 DOWNLOAD

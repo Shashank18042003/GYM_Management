@@ -1,82 +1,104 @@
 package com.model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Vector;
 
-import javax.sql.rowset.JdbcRowSet;
+import com.DBconnection.Myjdbc;
 
-import com.DBconnection.MyrowSet;
+public class PaymentsDAO implements PaymentsDesign {
 
-public class PaymentsDAO  implements PaymentsDesign{
-@Override
-public Vector<Payments> getuserdata(String email) {
-	Vector<Payments> v=new Vector<>();
-	if (email == null || email.trim().isEmpty()) {
-		return v;
+	@Override
+	public Vector<Payments> getuserdata(String email) {
+		Vector<Payments> payments = new Vector<>();
+		if (email == null || email.trim().isEmpty()) {
+			return payments;
+		}
+		String sql = "SELECT p.id, p.user_id, p.amount, p.payment_id, p.order_id, p.status, p.created_at, u.email "
+				+ "FROM payments p JOIN gym_users u ON p.user_id = u.id WHERE u.email = ? ORDER BY p.id DESC";
+		try (Connection con = Myjdbc.myconn();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, email);
+			try (ResultSet rs = ps.executeQuery()) {
+				mapPayments(rs, payments);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return payments;
 	}
-	JdbcRowSet jrs=MyrowSet.Myrowset();
-	try {
-		jrs.setCommand("SELECT p.id, p.user_id, p.amount, p.payment_date, p.payment_status, p.payment_method\n"
-				+ "FROM payments p\n"
-				+ "JOIN gym_users u ON p.user_id = u.id\n"
-				+ "WHERE u.email = ?\n"
-				+ "ORDER BY p.id DESC");
-		jrs.setString(1, email);
-		jrs.execute();
-		mapPayments(jrs, v);
-	} catch(Exception e) {
-		e.printStackTrace();
-	}
-	return v;
-}
 
-public Vector<Payments> getuserdataByUserId(int userId) {
-	Vector<Payments> v = new Vector<>();
-	if (userId <= 0) {
-		return v;
+	@Override
+	public void savePayment(Payments payment) {
+		if (payment == null) {
+			return;
+		}
+		String sql = "INSERT INTO payments(user_id, amount, payment_id, order_id, status) VALUES(?,?,?,?,?)";
+		try (Connection con = Myjdbc.myconn();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, payment.getUserId());
+			ps.setInt(2, payment.getAmount());
+			ps.setString(3, payment.getPaymentId());
+			ps.setString(4, payment.getOrderId());
+			ps.setString(5, payment.getStatus());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	JdbcRowSet jrs = MyrowSet.Myrowset();
-	try {
-		jrs.setCommand("SELECT id, user_id, amount, payment_date, payment_status, payment_method FROM payments WHERE user_id = ? ORDER BY id DESC");
-		jrs.setInt(1, userId);
-		jrs.execute();
-		mapPayments(jrs, v);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-	return v;
-}
-@Override
-public Vector<Payments> getallpayments() {
-	Vector<Payments> v=new Vector<>();
-JdbcRowSet jrs=MyrowSet.Myrowset();
-try {
-	jrs.setCommand("SELECT p.id, p.user_id, p.amount, p.payment_date, p.payment_status, p.payment_method, u.email\n"
-			+ "FROM payments p\n"
-			+ "LEFT JOIN gym_users u ON p.user_id = u.id\n"
-			+ "ORDER BY p.id DESC");
-	jrs.execute();
-	mapPayments(jrs, v);
-	
-}
-catch(Exception e)
-{
-	e.printStackTrace();
-}
-return v;
-}
 
-private void mapPayments(JdbcRowSet jrs, Vector<Payments> v) throws Exception {
-	while(jrs.next()){
-		Payments p=new Payments();
-		p.setId(jrs.getInt("id"));
-		p.setEmail(jrs.getString("email"));
-		p.setUser_id(jrs.getInt("user_id"));
-		p.setAmount(jrs.getDouble("amount"));
-		p.setPayment_date(jrs.getString("payment_date"));
-		p.setPayment_status(jrs.getString("payment_status"));
-		p.setPayment_method(jrs.getString("payment_method"));
-		v.add(p);
+	public Vector<Payments> getuserdataByUserId(int userId) {
+		Vector<Payments> payments = new Vector<>();
+		if (userId <= 0) {
+			return payments;
+		}
+		String sql = "SELECT id, user_id, amount, payment_id, order_id, status, created_at FROM payments "
+				+ "WHERE user_id = ? ORDER BY id DESC";
+		try (Connection con = Myjdbc.myconn();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, userId);
+			try (ResultSet rs = ps.executeQuery()) {
+				mapPayments(rs, payments);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return payments;
 	}
-}
+
+	@Override
+	public Vector<Payments> getallpayments() {
+		Vector<Payments> payments = new Vector<>();
+		String sql = "SELECT p.id, p.user_id, p.amount, p.payment_id, p.order_id, p.status, p.created_at, u.email "
+				+ "FROM payments p LEFT JOIN gym_users u ON p.user_id = u.id ORDER BY p.id DESC";
+		try (Connection con = Myjdbc.myconn();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			mapPayments(rs, payments);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return payments;
+	}
+
+	private void mapPayments(ResultSet rs, Vector<Payments> payments) throws Exception {
+		while (rs.next()) {
+			Payments payment = new Payments();
+			payment.setId(rs.getInt("id"));
+			payment.setUserId(rs.getInt("user_id"));
+			payment.setAmount(rs.getInt("amount"));
+			payment.setPaymentId(rs.getString("payment_id"));
+			payment.setOrderId(rs.getString("order_id"));
+			payment.setStatus(rs.getString("status"));
+			payment.setCreatedAt(rs.getString("created_at"));
+			try {
+				payment.setEmail(rs.getString("email"));
+			} catch (Exception ignored) {
+				payment.setEmail(null);
+			}
+			payments.add(payment);
+		}
+	}
 }
 

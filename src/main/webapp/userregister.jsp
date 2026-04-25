@@ -8,206 +8,264 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-body {
-    background: linear-gradient(145deg,#0b1220,#0f172a,#111827);
-    color: #e2e8f0;
+
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html,body{
+    height:100vh;
+    overflow:hidden;
 }
 
-.form-card {
-    max-width: 760px;
-    margin: 40px auto;
-    padding: 30px;
-    border-radius: 18px;
-    background: rgba(15,23,42,0.95);
-    border: 1px solid rgba(148,163,184,0.25);
+/* BACKGROUND */
+body{
+    background:url('login.jpg') no-repeat center/cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:18px 12px; /* 🔥 more top/bottom balance */
+    position:relative;
 }
 
-h3 { color: #f8fafc; }
-.subtle { color: #94a3b8; }
-
-label {
-    color: #e2e8f0;
-    font-weight: 600;
+body::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.65);
 }
 
-.form-control, .form-select {
-    background: rgba(2,6,23,0.85);
-    border: 1px solid rgba(148,163,184,0.35);
-    color: #ffffff;
-    border-radius: 12px;
+/* CARD */
+.form-card{
+    position:relative;
+    z-index:1;
+
+    width:90%;
+    max-width:640px;
+    height:92vh; /* 🔥 reduced from 100vh */
+
+    border-radius:16px;
+    background:rgba(15,23,42,0.85);
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(148,163,184,0.2);
+    display:flex;
+    flex-direction:column;
 }
 
-.form-control::placeholder {
-    color: #94a3b8;
+/* HEADER */
+.form-header{
+    padding:14px 10px; /* 🔥 better top spacing */
+    text-align:center;
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: #38bdf8;
-    box-shadow: 0 0 0 0.2rem rgba(56,189,248,0.2);
+.form-header h3{
+    color:#fff;
+    font-size:22px;
+    font-weight:700;
 }
 
-.btn-success {
-    background: linear-gradient(120deg,#22c55e,#16a34a);
-    border: none;
-    font-weight: 700;
-    border-radius: 12px;
+.form-header p{
+    color:#cbd5f5;
+    font-size:13px;
 }
 
-.preview-img {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #38bdf8;
+/* BODY */
+.form-body{
+    padding:14px; /* 🔥 balanced inner gap */
 }
+
+/* GRID */
+.form-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px 16px;
+}
+
+.full{
+    grid-column: span 2;
+}
+
+/* SMALL ROW */
+.small-row{
+    grid-column: span 2;
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:10px;
+}
+
+/* INPUT */
+.form-control,.form-select{
+    height:36px;
+    font-size:13px;
+    padding:5px 10px;
+
+    background:rgba(0,0,0,0.45);
+    border:1px solid rgba(148,163,184,0.3);
+    color:#fff;
+    border-radius:6px;
+}
+
+/* SMALL */
+.small{
+    height:34px;
+}
+
+/* TEXTAREA */
+textarea.form-control{
+    height:60px; /* 🔥 reduced slightly */
+}
+
+/* LABEL */
+label{
+    font-size:13px;
+    color:#e2e8f0;
+    margin-bottom:3px;
+}
+
+/* BUTTON */
+.btn-success{
+    height:40px;
+    font-size:14px;
+    margin-top:10px;
+
+    background:linear-gradient(135deg,#1d4ed8,#4f46e5);
+    border:none;
+    border-radius:8px;
+}
+
+/* IMAGE */
+.preview-img{
+    width:65px;
+    height:65px;
+    border-radius:50%;
+    border:2px solid #3b82f6;
+    object-fit:cover;
+}
+
+/* LINK */
+a{
+    font-size:13px;
+    color:#93c5fd;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="card shadow form-card">
+<div class="form-card">
 
-<%
-HttpSession hs = request.getSession(false);
-boolean isEmbeddedInAdmin = request.getRequestURI() != null &&
-                             request.getRequestURI().contains("admindashboard.jsp");
-
-if(!isEmbeddedInAdmin){
-    String p = request.getParameter("page");
-    if(p != null && p.equalsIgnoreCase("userregister.jsp")){
-        isEmbeddedInAdmin = true;
-    }
-}
-%>
-
-<h3 class="text-center mb-2 fw-bold">Create Account</h3>
-<p class="text-center subtle mb-4">Join the gym system</p>
-
-<!-- MESSAGE -->
-<%
-String msg = (String) request.getAttribute("msg");
-if(msg != null){
-%>
-<div class="alert alert-info text-center"><%= msg %></div>
-<%
-}
-%>
-
-<form action="Register" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-
-<div class="row g-3">
-
-<!-- PROFILE PIC -->
-<div class="col-12 text-center mb-3">
-    <img id="previewImg"
-         src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-         class="preview-img">
-
-    <input type="file" name="profilePic"
-           class="form-control mt-3"
-           accept="image/*"
-           onchange="previewImage(event)">
+<div class="form-header">
+<h3>Create Account</h3>
+<p>Join the gym system</p>
 </div>
 
-<div class="col-md-6">
+<form class="form-body" onsubmit="return validateForm()">
+
+<div class="form-row">
+
+<!-- PROFILE -->
+<div class="full text-center">
+<img id="previewImg"
+     src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+     class="preview-img">
+
+<input type="file"
+       class="form-control mt-1"
+       accept="image/*"
+       onchange="previewImage(event)">
+</div>
+
+<!-- BASIC -->
+<div>
 <label>Username</label>
-<input type="text" class="form-control" name="username" required>
+<input type="text" class="form-control">
 </div>
 
-<div class="col-md-6">
+<div>
 <label>Email</label>
-<input type="email" class="form-control" name="email" required>
+<input type="email" class="form-control">
 </div>
 
-<div class="col-md-6">
+<div>
 <label>Password</label>
-<input type="password" id="pass" class="form-control" name="password" required>
+<input type="password" id="pass" class="form-control">
 </div>
 
-<div class="col-md-6">
-<label>Confirm Password</label>
-<input type="password" id="cpass" class="form-control" name="confirmPassword" required>
+<div>
+<label>Confirm</label>
+<input type="password" id="cpass" class="form-control">
 </div>
 
-<div class="col-md-6">
-<label>Date of Birth</label>
-<input type="date" class="form-control" name="dob" required>
+<!-- SMALL ROW -->
+<div class="small-row">
+
+<div>
+<label>DOB</label>
+<input type="date" class="form-control small">
 </div>
 
-<div class="col-md-6">
+<div>
 <label>Gender</label>
-<select class="form-select" name="gender">
-<option value="">Select</option>
+<select class="form-select small">
+<option>Select</option>
 <option>Male</option>
 <option>Female</option>
-<option>Other</option>
 </select>
 </div>
 
-<div class="col-md-6">
+<div>
+<label>Weight</label>
+<input type="number" class="form-control small">
+</div>
+
+<div>
+<label>Height</label>
+<input type="number" class="form-control small">
+</div>
+
+</div>
+
+<div class="full">
 <label>Phone</label>
-<input type="text" class="form-control" name="phone">
+<input type="text" class="form-control">
 </div>
 
-<div class="col-md-6">
-<label>Weight (kg)</label>
-<input type="number" class="form-control" name="weight">
-</div>
-
-<div class="col-md-6">
-<label>Height (cm)</label>
-<input type="number" class="form-control" name="height">
-</div>
-
-<div class="col-12">
+<div class="full">
 <label>Address</label>
-<textarea class="form-control" name="address" rows="3"></textarea>
+<textarea class="form-control"></textarea>
 </div>
 
 </div>
 
-<button class="btn btn-success w-100 mt-4">Register</button>
+<button class="btn btn-success w-100">Register</button>
 
-<!-- LOGIN LINK LOGIC -->
-<%
-if(hs == null || hs.getAttribute("userId") == null){
-    if(!isEmbeddedInAdmin){
-%>
-<div class="text-center mt-3">
-<a href="login.html" style="color:#93c5fd; text-decoration:none;">
-Already have an account? Login
-</a>
+<div class="text-center mt-2">
+<a href="login.html">Already have an account? Login</a>
 </div>
-<%
-    }
-}
-%>
 
 </form>
 </div>
 
-<!-- JS -->
 <script>
+function previewImage(event){
+    const file = event.target.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById("previewImg").src = e.target.result;
+        reader.readAsDataURL(file);
+    }
+}
+
 function validateForm(){
     let p = document.getElementById("pass").value;
     let c = document.getElementById("cpass").value;
 
     if(p !== c){
-        alert("Passwords do not match ❌");
+        alert("Passwords do not match");
         return false;
     }
     return true;
-}
-
-function previewImage(event){
-    const file = event.target.files[0];
-    if(file){
-        const reader = new FileReader();
-        reader.onload = function(e){
-            document.getElementById("previewImg").src = e.target.result;
-        }
-        reader.readAsDataURL(file);
-    }
 }
 </script>
 

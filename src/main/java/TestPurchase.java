@@ -94,10 +94,12 @@ public class TestPurchase extends HttpServlet {
 
 			// 3) Insert payment
 			try (PreparedStatement ps = con.prepareStatement(
-					"INSERT INTO payments (user_id, amount, payment_date, payment_status, payment_method) "
-							+ "VALUES (?, ?, CURDATE(), 'SUCCESS', 'TEST')")) {
+					"INSERT INTO payments (user_id, amount, payment_id, order_id, status) "
+							+ "VALUES (?, ?, ?, ?, 'SUCCESS')")) {
 				ps.setInt(1, userId);
-				ps.setDouble(2, amount);
+				ps.setInt(2, (int) amount);
+				ps.setString(3, "TEST_PAYMENT_" + System.currentTimeMillis());
+				ps.setString(4, "TEST_ORDER_" + System.currentTimeMillis());
 				ps.executeUpdate();
 			}
 
