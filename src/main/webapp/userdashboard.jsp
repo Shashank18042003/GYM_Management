@@ -297,6 +297,7 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -378,10 +379,20 @@ function sendToServer(res, plan, amount, days, status) {
         console.log("SERVER:", msg);
 
         if(status === "SUCCESS"){
-            alert("Payment Successful ✅");
+        	Swal.fire({
+        	    icon: 'success',
+        	    title: 'Payment Successful',
+        	    text: 'Your membership is activated 🎉',
+        	    confirmButtonColor: '#3085d6'
+        	});
             window.location = "UserDashboard?page=membership.jsp";
         } else {
-            alert("Payment Failed ❌ (Recorded)");
+        	Swal.fire({
+        	    icon: 'error',
+        	    title: 'Payment Failed',
+        	    text: 'Please try again or use another method',
+        	    confirmButtonColor: '#d33'
+        	});
         }
     });
 }
