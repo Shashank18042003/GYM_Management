@@ -210,7 +210,7 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
             <aside class="gym-side">
                 <div class="gym-logo">
                     <h5>User Panel</h5>
-                    <small>Gym Management</small>
+                    <small>Elite Fitness</small>
                 </div>
 
                 <nav class="gym-nav">
@@ -317,7 +317,7 @@ function pay(plan, amount, days) {
             key: "rzp_test_ShYQR0oAoEClXB",
             amount: order.amount,
             currency: "INR",
-            name: "Gym System",
+            name: "Elite Fitness",
             description: plan + " Plan",
             order_id: order.id,
 

@@ -9,11 +9,7 @@ import com.gym.model.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 
 @MultipartConfig
 public class UpdateProfile extends HttpServlet {
@@ -29,18 +25,23 @@ public class UpdateProfile extends HttpServlet {
             return;
         }
 
+        // BASIC INPUTS
         String username = request.getParameter("username");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
+
         String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirm = request.getParameter("confirmPassword");
+
         String dobStr = request.getParameter("dob");
         String weightStr = request.getParameter("weight");
         String heightStr = request.getParameter("height");
 
+        // DAO
         UserDAO dao = new UserDAO();
 
+        // EXISTING USER
         User existing = (User) session.getAttribute("user");
         if (existing == null) {
             existing = dao.getUserByEmail(email);
@@ -50,43 +51,73 @@ public class UpdateProfile extends HttpServlet {
             }
         }
 
+        // ✅ PASSWORD HANDLING
         String finalPassword = existing.getPassword();
         boolean wantsPasswordChange = newPassword != null && !newPassword.isBlank();
 
         if (wantsPasswordChange) {
+
+            // confirm mismatch
             if (confirm == null || !newPassword.equals(confirm)) {
                 response.sendRedirect("userdashboard.jsp?page=profile.jsp&error=2");
                 return;
             }
+
+            // wrong current password
             User auth = dao.login(email, currentPassword);
             if (auth == null) {
                 response.sendRedirect("userdashboard.jsp?page=profile.jsp&error=1");
                 return;
             }
+
             finalPassword = newPassword;
         }
 
-        int weight = 0;
-        int height = 0;
+        // ✅ SAFE PARSING
+        int weight = 0, height = 0;
         Date dob = null;
-        try { weight = (weightStr == null || weightStr.isBlank()) ? 0 : Integer.parseInt(weightStr); } catch (Exception ignored) {}
-        try { height = (heightStr == null || heightStr.isBlank()) ? 0 : Integer.parseInt(heightStr); } catch (Exception ignored) {}
-        try { dob = (dobStr == null || dobStr.isBlank()) ? null : Date.valueOf(dobStr); } catch (Exception ignored) {}
 
+        try {
+            if (weightStr != null && !weightStr.isBlank())
+                weight = Integer.parseInt(weightStr);
+        } catch (Exception ignored) {}
+
+        try {
+            if (heightStr != null && !heightStr.isBlank())
+                height = Integer.parseInt(heightStr);
+        } catch (Exception ignored) {}
+
+        try {
+            if (dobStr != null && !dobStr.isBlank())
+                dob = Date.valueOf(dobStr);
+        } catch (Exception ignored) {}
+
+        // ✅ PROFILE PIC LOGIC
         String profilePic = existing.getProfilePic();
+
+        // 🔥 REMOVE PIC FEATURE
+        String removePic = request.getParameter("removePic");
+        if ("on".equals(removePic)) {
+            profilePic = "default.png";
+        }
+
+        // 🔥 NEW UPLOAD (overrides remove if uploaded)
         Part filePart = request.getPart("profilePic");
         if (filePart != null && filePart.getSize() > 0) {
+
             String originalName = filePart.getSubmittedFileName();
             String fileName = System.currentTimeMillis() + "_" + originalName;
+
             String uploadPath = getServletContext().getRealPath("/") + "uploads";
             File dir = new File(uploadPath);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
+            if (!dir.exists()) dir.mkdirs();
+
             filePart.write(uploadPath + File.separator + fileName);
+
             profilePic = fileName;
         }
 
+        // ✅ SET USER OBJECT
         User u = new User();
         u.setEmail(email);
         u.setUsername(username);
@@ -98,9 +129,10 @@ public class UpdateProfile extends HttpServlet {
         u.setHeight(height);
         u.setProfilePic(profilePic);
 
+        // ✅ UPDATE DB
         dao.updateUserProfile(u);
 
-        // update session
+        // ✅ UPDATE SESSION
         existing.setUsername(username);
         existing.setPassword(finalPassword);
         existing.setDob(dob);
@@ -109,10 +141,11 @@ public class UpdateProfile extends HttpServlet {
         existing.setWeight(weight);
         existing.setHeight(height);
         existing.setProfilePic(profilePic);
-        session.setAttribute("user", existing);
 
+        session.setAttribute("user", existing);
         session.setAttribute("msg", "updated");
 
+        // ✅ REDIRECT
         response.sendRedirect("userdashboard.jsp?page=profile.jsp");
     }
 }

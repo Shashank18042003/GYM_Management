@@ -21,8 +21,14 @@ public class ExportUsers extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        UserDAO dao = new UserDAO(); // where fetch() exists
-        Vector<AdminUserRow> list = dao.fetch();
+        String filter = request.getParameter("filter");
+
+        if (filter == null || filter.isBlank()) {
+            filter = "all";
+        }
+
+        UserDAO dao = new UserDAO();
+        Vector<AdminUserRow> list = dao.fetch(filter); // ✅ FILTER USED
 
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("Users");
@@ -40,31 +46,27 @@ public class ExportUsers extends HttpServlet {
         header.createCell(6).setCellValue("Status");
         header.createCell(7).setCellValue("Days Left");
 
-        // DATA (from your fetch())
-        for(AdminUserRow r : list){
+        // DATA
+        for (AdminUserRow r : list) {
+
             Row row = sheet.createRow(rowNum++);
 
             row.createCell(0).setCellValue(r.getUsername());
             row.createCell(1).setCellValue(r.getEmail());
             row.createCell(2).setCellValue(r.getPhone());
-
             row.createCell(3).setCellValue(
-                r.getPlanName() != null ? r.getPlanName() : "NO PLAN"
+                    r.getPlanName() != null ? r.getPlanName() : "NO PLAN"
             );
-
             row.createCell(4).setCellValue(
-                r.getStartDate() != null ? r.getStartDate() : "-"
+                    r.getStartDate() != null ? r.getStartDate() : "-"
             );
-
             row.createCell(5).setCellValue(
-                r.getEndDate() != null ? r.getEndDate() : "-"
+                    r.getEndDate() != null ? r.getEndDate() : "-"
             );
-
             row.createCell(6).setCellValue(r.getMembershipStatus());
             row.createCell(7).setCellValue(r.getDaysLeft());
         }
 
-        // DOWNLOAD
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=users.xlsx");
 

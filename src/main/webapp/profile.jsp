@@ -1,221 +1,238 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 
-<div class="profile-wrapper">
+<%
+com.gym.model.User sUser = (com.gym.model.User) session.getAttribute("user");
 
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="text-light mb-0">
-            <i class="bi bi-person-circle"></i> My Profile
-        </h5>
+if (sUser == null) {
+    response.sendRedirect("login.html");
+    return;
+}
 
-        <button onclick="toggleEdit()" class="btn btn-outline-info btn-sm">
-            <i class="bi bi-pencil"></i> Edit
-        </button>
-    </div>
+String picPath = "images/default.png";
+String dobValue = "", dojValue = "";
+int age = 0;
+double bmi = 0;
+String bmiStatus = "-";
 
-    <!-- PROFILE DISPLAY -->
-    <div class="text-center mb-4">
-
-        <%
-        com.gym.model.User sUser = (com.gym.model.User) session.getAttribute("user");
-        String pic = (sUser != null) ? sUser.getProfilePic() : null;
-        String picPath = "images/default.png";
-        if (pic != null && !pic.isBlank()) {
-            picPath = "default.png".equalsIgnoreCase(pic) ? "images/default.png" : ("uploads/" + pic);
-        }
-        String dobValue = "";
-        if (sUser != null && sUser.getDob() != null) {
-            dobValue = sUser.getDob().toLocalDate().toString();
-        }
-        %>
-        <img src="<%= picPath %>" class="avatar-circle avatar-img" alt="Profile picture">
-
-        <h3 class="fw-bold mt-2 text-white">
-            ${sessionScope.user.username}
-        </h3>
-
-        <p class="text-muted small">
-            Member since: ${sessionScope.user.doj}
-        </p>
-
-    </div>
-
-    <!-- EXTRA DETAILS (NO DUPLICATION) -->
-    <div class="row text-center mb-4">
-
-        <div class="col-4">
-            <p class="label">Age</p>
-            <p class="value">${sessionScope.user.age}</p>
-        </div>
-
-        <div class="col-4">
-            <p class="label">Weight</p>
-            <p class="value">${sessionScope.user.weight} kg</p>
-        </div>
-
-        <div class="col-4">
-            <p class="label">Height</p>
-            <p class="value">${sessionScope.user.height} cm</p>
-        </div>
-
-    </div>
-
-    <!-- SUCCESS MESSAGE -->
-    <%
-    String msg = (String) session.getAttribute("msg");
-    if ("updated".equals(msg)) {
-    %>
-        <p class="text-success text-center">Profile updated successfully</p>
-    <%
-        session.removeAttribute("msg");
+// PROFILE PIC
+if (sUser.getProfilePic() != null && !sUser.getProfilePic().isBlank()) {
+    if (!"default.png".equalsIgnoreCase(sUser.getProfilePic())) {
+        picPath = "uploads/" + sUser.getProfilePic();
     }
-    %>
+}
 
-    <!-- ERROR MESSAGE -->
-    <%
-    String err = request.getParameter("error");
-    if ("1".equals(err)) {
-    %>
-        <p class="text-danger text-center">Wrong current password</p>
-    <%
-    } else if ("2".equals(err)) {
-    %>
-        <p class="text-danger text-center">Passwords do not match</p>
-    <%
+// DOB + AGE
+try {
+    if (sUser.getDob() != null) {
+        java.time.LocalDate dob = sUser.getDob().toLocalDate();
+        dobValue = dob.toString();
+        age = java.time.Period.between(dob, java.time.LocalDate.now()).getYears();
     }
-    %>
+} catch (Exception e) {}
 
-    <!-- EDIT FORM -->
-    <div id="editForm"
-         style="<%= (request.getParameter("error") != null || session.getAttribute("msg") != null) ? "display:block;" : "display:none;" %>">
+// DOJ
+try {
+    if (sUser.getDoj() != null) {
+        dojValue = sUser.getDoj().toLocalDate().toString();
+    }
+} catch (Exception e) {}
 
-        <form action="UpdateProfile" method="post" enctype="multipart/form-data" class="edit-box">
+// BMI
+try {
+    if (sUser.getHeight() > 0 && sUser.getWeight() > 0) {
+        double h = sUser.getHeight() / 100.0;
+        bmi = sUser.getWeight() / (h * h);
 
-            <input type="text" name="username"
-                   value="${sessionScope.user.username}"
-                   class="form-control custom-input mb-2" required>
+        if (bmi < 18.5) bmiStatus = "Underweight";
+        else if (bmi < 25) bmiStatus = "Normal";
+        else if (bmi < 30) bmiStatus = "Overweight";
+        else bmiStatus = "Obese";
+    }
+} catch (Exception e) {}
+%>
 
-            <input type="date" name="dob"
-                   value="<%= dobValue %>"
-                   class="form-control custom-input mb-2">
+<div class="profile-container">
 
-            <input type="text" name="phone"
-                   value="${sessionScope.user.phone}"
-                   placeholder="Phone"
-                   class="form-control custom-input mb-2">
+<!-- PROFILE CARD -->
+<div class="profile-card">
 
-            <input type="number" name="weight"
-                   value="${sessionScope.user.weight}"
-                   placeholder="Weight (kg)"
-                   class="form-control custom-input mb-2">
-
-            <input type="number" name="height"
-                   value="${sessionScope.user.height}"
-                   placeholder="Height (cm)"
-                   class="form-control custom-input mb-2">
-
-            <textarea name="address" rows="2"
-                      placeholder="Address"
-                      class="form-control custom-input mb-2">${sessionScope.user.address}</textarea>
-
-            <input type="file" name="profilePic"
-                   accept="image/*"
-                   class="form-control custom-input mb-2">
-
-            <input type="password" name="currentPassword"
-                   placeholder="Current password (only for password change)"
-                   class="form-control custom-input mb-2">
-
-            <input type="password" name="newPassword"
-                   placeholder="New password (optional)"
-                   class="form-control custom-input mb-2">
-
-            <input type="password" name="confirmPassword"
-                   placeholder="Confirm password"
-                   class="form-control custom-input mb-3">
-
-            <button class="btn btn-success w-100">
-                Update Profile
-            </button>
-
-            <button type="button" onclick="toggleEdit()"
-                    class="btn btn-secondary w-100 mt-2">
-                Cancel
-            </button>
-
-        </form>
+    <div class="text-end">
+        <button onclick="toggleEdit()" class="btn btn-outline-info btn-sm">Edit</button>
     </div>
+
+    <div class="text-center">
+        <img id="profilePreview" src="<%= picPath %>" class="avatar">
+        <h3 class="mt-2">${sessionScope.user.username}</h3>
+        <small class="text-muted">Member since: <%= dojValue %></small>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+        <div><span>Age</span><b><%= age %></b></div>
+        <div><span>Weight</span><b>${sessionScope.user.weight} kg</b></div>
+        <div><span>Height</span><b>${sessionScope.user.height} cm</b></div>
+    </div>
+
+    <!-- BMI -->
+    <div class="bmi-box">
+        <h5>BMI: <%= bmi > 0 ? String.format("%.1f", bmi) : "-" %></h5>
+        <p class="bmi <%= bmiStatus.toLowerCase() %>"><%= bmiStatus %></p>
+    </div>
+
+</div>
+
+<!-- EDIT FORM -->
+<div id="editForm" class="edit-card" style="display:none;">
+
+<form action="UpdateProfile" method="post" enctype="multipart/form-data">
+
+<input type="text" name="username"
+value="${sessionScope.user.username}"
+placeholder="Username"
+class="form-control mb-3" required>
+
+<input type="date" name="dob"
+value="<%= dobValue %>"
+class="form-control mb-3">
+
+<input type="text" name="phone"
+value="${sessionScope.user.phone}"
+placeholder="Phone"
+class="form-control mb-3">
+
+<input type="number" name="weight"
+value="${sessionScope.user.weight}"
+placeholder="Weight (kg)"
+class="form-control mb-3">
+
+<input type="number" name="height"
+value="${sessionScope.user.height}"
+placeholder="Height (cm)"
+class="form-control mb-3">
+
+<textarea name="address"
+placeholder="Address"
+class="form-control mb-3">${sessionScope.user.address}</textarea>
+
+<!-- IMAGE -->
+<input type="file" name="profilePic"
+class="form-control mb-2"
+accept="image/*"
+onchange="previewImage(event)">
+
+<div class="form-check mb-3">
+<input type="checkbox" name="removePic" class="form-check-input">
+<label class="form-check-label text-light">Remove profile picture</label>
+</div>
+
+<!-- PASSWORD -->
+<input type="password" name="currentPassword"
+placeholder="Current password"
+class="form-control mb-2">
+
+<input type="password" name="newPassword"
+placeholder="New password"
+class="form-control mb-2">
+
+<input type="password" name="confirmPassword"
+placeholder="Confirm password"
+class="form-control mb-3">
+
+<button class="btn btn-success w-100">Update Profile</button>
+
+<button type="button" onclick="toggleEdit()"
+class="btn btn-secondary w-100 mt-2">Cancel</button>
+
+</form>
+</div>
 
 </div>
 
 <!-- STYLE -->
 <style>
-.profile-wrapper {
-    max-width: 520px;
+
+.profile-container {
+    max-width: 600px;
     margin: auto;
-    padding: 20px;
 }
 
-.avatar-circle {
-    width: 75px;
-    height: 75px;
+/* CARD */
+.profile-card, .edit-card {
+    background: rgba(15,23,42,0.85);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+/* IMAGE */
+.avatar {
+    width: 95px;
+    height: 95px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    margin: auto;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-}
-.avatar-img {
     object-fit: cover;
-    border: 2px solid rgba(56, 189, 248, 0.5);
-    background: rgba(15, 23, 42, 0.8);
+    border: 3px solid #38bdf8;
 }
 
-.label {
+/* STATS */
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.stats-row div {
+    text-align: center;
+}
+
+.stats-row span {
+    display: block;
     color: #94a3b8;
     font-size: 12px;
 }
 
-.value {
-    color: white;
-    font-weight: 600;
-}
-
-.edit-box {
-    padding: 20px;
-    border-radius: 14px;
-    background: rgba(2,6,23,0.6);
-    border: 1px solid rgba(148,163,184,0.2);
-}
-
-/* INPUT */
-.custom-input {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(148,163,184,0.2);
+.stats-row b {
     color: white;
 }
 
-.custom-input::placeholder {
-    color: #94a3b8;
+/* BMI */
+.bmi-box {
+    text-align: center;
+    margin-top: 20px;
 }
 
-.custom-input:focus {
-    border-color: #38bdf8;
-    box-shadow: 0 0 0 0.2rem rgba(56,189,248,0.2);
+.bmi {
+    font-weight: bold;
 }
+
+.bmi.underweight { color:#38bdf8; }
+.bmi.normal { color:#22c55e; }
+.bmi.overweight { color:#f59e0b; }
+.bmi.obese { color:#ef4444; }
+
+/* INPUT FIX */
+.form-control {
+    background: #ffffff !important;
+    color: #000 !important;
+    border-radius: 10px;
+}
+
 </style>
 
 <!-- SCRIPT -->
 <script>
 function toggleEdit(){
     let f = document.getElementById("editForm");
-    f.style.display = (f.style.display === "none" || f.style.display === "")
-        ? "block"
-        : "none";
+    f.style.display = (f.style.display === "none") ? "block" : "none";
+}
+
+function previewImage(event){
+    const file = event.target.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            document.getElementById("profilePreview").src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
 }
 </script>

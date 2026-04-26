@@ -155,7 +155,7 @@ label{
 
 <div class="form-header">
 <h3>Create Account</h3>
-<p>Join the gym system</p>
+<p>Join the Fitness Journey...c</p>
 </div>
 
 <form class="form-body" action="Register" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">

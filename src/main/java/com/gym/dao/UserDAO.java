@@ -85,108 +85,136 @@ public class UserDAO implements ProjectDesign{
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
-	public Vector<AdminUserRow> fetch() {
-		JdbcRowSet jrs = MyrowSet.Myrowset();
-		Vector<AdminUserRow> rows = new Vector<>();
+	public Vector<AdminUserRow> fetch(String filter) {
 
-		try {
-			
-			jrs.setCommand(
-				"SELECT " +
-				"  u.id AS user_id, u.username, u.email, u.phone, " +
-				"  m.plan_name, m.start_date, m.end_date " +
-				"FROM gym_users u " +
-				"LEFT JOIN (" +
-				"  SELECT mm.user_id, mm.plan_name, mm.start_date, mm.end_date " +
-				"  FROM membership mm " +
-				"  INNER JOIN (" +
-				"    SELECT user_id, MAX(end_date) AS max_end " +
-				"    FROM membership " +
-				"    GROUP BY user_id" +
-				"  ) latest ON latest.user_id = mm.user_id AND latest.max_end = mm.end_date" +
-				") m ON m.user_id = u.id " +
-				"WHERE u.email <> ? " +
-				"ORDER BY u.id DESC"
-			);
-			jrs.setString(1, "admin@gmail.com");
-			jrs.execute();
+	    JdbcRowSet jrs = MyrowSet.Myrowset();
+	    Vector<AdminUserRow> rows = new Vector<>();
 
-			while (jrs.next()) {
-				AdminUserRow r = new AdminUserRow();
-				r.setUserId(jrs.getInt("user_id"));
-				r.setUsername(jrs.getString("username"));
-				r.setEmail(jrs.getString("email"));
-				r.setPhone(jrs.getString("phone"));
-				r.setPlanName(jrs.getString("plan_name"));     // null => NO PLAN
-				r.setStartDate(jrs.getString("start_date"));
-				r.setEndDate(jrs.getString("end_date"));
+	    if (filter == null || filter.isBlank()) {
+	        filter = "all";
+	    }
 
-				// Compute status + days left for admin display
-				String startRaw = r.getStartDate();
-				String endRaw = r.getEndDate();
-				if (endRaw == null || endRaw.isBlank() || startRaw == null || startRaw.isBlank()) {
-					r.setMembershipStatus("NO PLAN");
-					r.setDaysLeft(0);
-				} else {
-					java.time.LocalDate today = java.time.LocalDate.now();
-					java.time.LocalDate start = java.time.LocalDate.parse(startRaw.split(" ")[0]);
-					java.time.LocalDate end = java.time.LocalDate.parse(endRaw.split(" ")[0]);
+	    try {
 
-					long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(today, end);
-					r.setDaysLeft((int) daysLeft);
+	        jrs.setCommand(
+	            "SELECT " +
+	            "  u.id AS user_id, u.username, u.email, u.phone, " +
+	            "  m.plan_name, m.start_date, m.end_date " +
+	            "FROM gym_users u " +
+	            "LEFT JOIN (" +
+	            "  SELECT mm.user_id, mm.plan_name, mm.start_date, mm.end_date " +
+	            "  FROM membership mm " +
+	            "  INNER JOIN (" +
+	            "    SELECT user_id, MAX(end_date) AS max_end " +
+	            "    FROM membership GROUP BY user_id" +
+	            "  ) latest ON latest.user_id = mm.user_id AND latest.max_end = mm.end_date" +
+	            ") m ON m.user_id = u.id " +
+	            "WHERE u.email <> ? " +
+	            "ORDER BY u.id DESC"
+	        );
 
-					if (today.isBefore(start)) {
-						r.setMembershipStatus("UPCOMING");
-					} else if (today.isAfter(end)) {
-						r.setMembershipStatus("EXPIRED");
-					} else {
-						r.setMembershipStatus("ACTIVE");
-					}
-				}
+	        jrs.setString(1, "admin@gmail.com");
+	        jrs.execute();
 
-				rows.add(r);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	        while (jrs.next()) {
 
-		// Fallback: if join fails / returns nothing, still show users (NO PLAN)
-		if (rows.isEmpty()) {
-			try {
-				jrs = MyrowSet.Myrowset();
-				jrs.setCommand(
-					"SELECT id AS user_id, username, email, phone " +
-					"FROM gym_users " +
-					"WHERE email <> ? " +
-					"ORDER BY id DESC"
-				);
-				jrs.setString(1, "admin@gmail.com");
-				jrs.execute();
+	            AdminUserRow r = new AdminUserRow();
 
-				while (jrs.next()) {
-					AdminUserRow r = new AdminUserRow();
-					r.setUserId(jrs.getInt("user_id"));
-					r.setUsername(jrs.getString("username"));
-					r.setEmail(jrs.getString("email"));
-					r.setPhone(jrs.getString("phone"));
-					r.setPlanName(null);
-					r.setStartDate(null);
-					r.setEndDate(null);
-					r.setMembershipStatus("NO PLAN");
-					r.setDaysLeft(0);
-					rows.add(r);
-				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
+	            r.setUserId(jrs.getInt("user_id"));
+	            r.setUsername(jrs.getString("username"));
+	            r.setEmail(jrs.getString("email"));
+	            r.setPhone(jrs.getString("phone"));
+	            r.setPlanName(jrs.getString("plan_name"));
+	            r.setStartDate(jrs.getString("start_date"));
+	            r.setEndDate(jrs.getString("end_date"));
 
-		return rows;
-		
+	            String startRaw = r.getStartDate();
+	            String endRaw = r.getEndDate();
+
+	            if (endRaw == null || endRaw.isBlank() ||
+	                startRaw == null || startRaw.isBlank()) {
+
+	                r.setMembershipStatus("NO PLAN");
+	                r.setDaysLeft(0);
+
+	            } else {
+
+	                java.time.LocalDate today = java.time.LocalDate.now();
+	                java.time.LocalDate start = java.time.LocalDate.parse(startRaw.split(" ")[0]);
+	                java.time.LocalDate end = java.time.LocalDate.parse(endRaw.split(" ")[0]);
+
+	                long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(today, end);
+	                r.setDaysLeft((int) daysLeft);
+
+	                if (today.isBefore(start)) {
+	                    r.setMembershipStatus("UPCOMING");
+	                } else if (today.isAfter(end)) {
+	                    r.setMembershipStatus("EXPIRED");
+	                } else {
+	                    r.setMembershipStatus("ACTIVE");
+	                }
+	            }
+
+	            // ✅ FILTER LOGIC
+	            if ("active".equalsIgnoreCase(filter) &&
+	                !"ACTIVE".equalsIgnoreCase(r.getMembershipStatus())) continue;
+
+	            if ("expired".equalsIgnoreCase(filter) &&
+	                !"EXPIRED".equalsIgnoreCase(r.getMembershipStatus())) continue;
+
+	            if ("noplan".equalsIgnoreCase(filter) &&
+	                !"NO PLAN".equalsIgnoreCase(r.getMembershipStatus())) continue;
+
+	            rows.add(r);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    // ✅ FALLBACK (NO MEMBERSHIP)
+	    if (rows.isEmpty()) {
+	        try {
+	            jrs = MyrowSet.Myrowset();
+
+	            jrs.setCommand(
+	                "SELECT id AS user_id, username, email, phone " +
+	                "FROM gym_users WHERE email <> ? ORDER BY id DESC"
+	            );
+
+	            jrs.setString(1, "admin@gmail.com");
+	            jrs.execute();
+
+	            while (jrs.next()) {
+
+	                AdminUserRow r = new AdminUserRow();
+
+	                r.setUserId(jrs.getInt("user_id"));
+	                r.setUsername(jrs.getString("username"));
+	                r.setEmail(jrs.getString("email"));
+	                r.setPhone(jrs.getString("phone"));
+
+	                r.setPlanName(null);
+	                r.setStartDate(null);
+	                r.setEndDate(null);
+	                r.setMembershipStatus("NO PLAN");
+	                r.setDaysLeft(0);
+
+	                // apply filter again
+	                if ("noplan".equalsIgnoreCase(filter) || "all".equalsIgnoreCase(filter)) {
+	                    rows.add(r);
+	                }
+	            }
+
+	        } catch (Exception e2) {
+	            e2.printStackTrace();
+	        }
+	    }
+
+	    return rows;
 	}
-
 	@Override
 	public User getUserByEmail(String email) {
 

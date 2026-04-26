@@ -21,27 +21,38 @@ public class Fetch extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession hs = request.getSession(false);
+
         if (hs == null || hs.getAttribute("userId") == null) {
             response.sendRedirect("login.html");
             return;
         }
 
+        // ✅ GET FILTER
+        String filter = request.getParameter("filter");
+
+        if (filter == null || filter.isBlank()) {
+            filter = "all";
+        }
+
         UserDAO dao = new UserDAO();
 
-        // Fetch users from DB
-        Vector<AdminUserRow> users = dao.fetch();
+        Vector<AdminUserRow> users = dao.fetch(filter); // ✅ PASS FILTER
 
         MembershipDAO membershipDAO = new MembershipDAO();
         EventDAO eventDAO = new EventDAO();
+
         hs.setAttribute("totalUsers", dao.userCount());
         hs.setAttribute("activeMembers", membershipDAO.MemberCount());
-        request.setAttribute("eventsCount", eventDAO.viewEvent().size());
 
-        // Send data to JSP
+        request.setAttribute("eventsCount", eventDAO.viewEvent().size());
         request.setAttribute("users", users);
 
-        // Forward to JSP
-        RequestDispatcher rd = request.getRequestDispatcher("admindashboard.jsp?page=userdetails.jsp");
+        // ✅ IMPORTANT FOR EXPORT BUTTON
+        request.setAttribute("selectedFilter", filter);
+
+        RequestDispatcher rd =
+                request.getRequestDispatcher("admindashboard.jsp?page=userdetails.jsp");
+
         rd.forward(request, response);
     }
 }
