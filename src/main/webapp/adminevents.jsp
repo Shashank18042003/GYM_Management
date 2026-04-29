@@ -4,15 +4,27 @@
 <div class="card-box">
 
     <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="text-light mb-0">
             <i class="bi bi-calendar-event text-info"></i> Manage Events
         </h5>
 
-        <!-- ADD BUTTON -->
         <a href="AddEvent" class="btn btn-gradient btn-sm px-3">
             <i class="bi bi-plus-lg"></i> Add Event
         </a>
+    </div>
+
+    <!-- 🔥 FILTER BUTTONS -->
+    <div class="mb-3 d-flex gap-2 flex-wrap">
+
+        <a href="ViewEventsAdmin?filter=all" class="btn btn-outline-light btn-sm">All</a>
+
+        <a href="ViewEventsAdmin?filter=upcoming" class="btn btn-outline-info btn-sm">Upcoming</a>
+
+        <a href="ViewEventsAdmin?filter=today" class="btn btn-outline-success btn-sm">Today</a>
+
+        <a href="ViewEventsAdmin?filter=past" class="btn btn-outline-secondary btn-sm">Past</a>
+
     </div>
 
     <%
@@ -24,7 +36,7 @@
     <!-- EMPTY STATE -->
     <div class="empty-box text-center">
         <i class="bi bi-calendar-x fs-2"></i>
-        <p class="mt-2 mb-0">No events yet</p>
+        <p class="mt-2 mb-0">No events found</p>
     </div>
 
     <%

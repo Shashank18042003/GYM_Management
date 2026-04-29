@@ -146,7 +146,11 @@ public class UserDAO implements ProjectDesign{
 	                java.time.LocalDate end = java.time.LocalDate.parse(endRaw.split(" ")[0]);
 
 	                long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(today, end);
+	                if (daysLeft<0) {
+	                	daysLeft=0;
+	                }
 	                r.setDaysLeft((int) daysLeft);
+	                
 
 	                if (today.isBefore(start)) {
 	                    r.setMembershipStatus("UPCOMING");

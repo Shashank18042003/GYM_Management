@@ -118,10 +118,7 @@ public class VerifyPayment extends HttpServlet {
             // 🔥 STEP 4: CREATE MEMBERSHIP
             MembershipDAO membershipDAO = new MembershipDAO();
 
-            if (membershipDAO.hasActivePlan(userId)) {
-                res.getWriter().write("Already have active membership.");
-                return;
-            }
+            if (!membershipDAO.hasActivePlan(userId)) {
 
             LocalDate start = LocalDate.now();
             LocalDate end = start.plusDays(days);
@@ -136,6 +133,10 @@ public class VerifyPayment extends HttpServlet {
             membershipDAO.createMembership(membership);
 
             res.getWriter().write("Payment successful. Membership activated.");
+            }
+            else {
+                res.getWriter().write("Payment successful, but membership already active.");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

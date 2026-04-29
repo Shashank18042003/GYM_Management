@@ -55,7 +55,7 @@ public class Register extends HttpServlet {
         try { height = Integer.parseInt(request.getParameter("height")); } catch (Exception ignored) {}
 
         // ✅ FILE UPLOAD
-        Part filePart = request.getPart("profilePic");
+        Part filePart = request.getPart("profile_pic");
         String fileName = "default.png";
 
         if (filePart != null && filePart.getSize() > 0) {
@@ -109,7 +109,7 @@ public class Register extends HttpServlet {
 
         // ✅ REDIRECT / FORWARD
         if (isAdminFlow) {
-            request.getRequestDispatcher("admindashboard.jsp?page=userregister.jsp")
+            request.getRequestDispatcher("Fetch?page=userdetails.jsp&filter=all")
                    .forward(request, response);
         } else {
             if (r > 0) {

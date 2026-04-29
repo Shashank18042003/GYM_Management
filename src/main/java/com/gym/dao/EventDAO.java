@@ -68,31 +68,48 @@ public class EventDAO implements EventDesign {
 		}
 		return hasNew;
 	}
+@Override
+	public List<EventData> viewEvent(String filter) {
 
-	@Override
-	public List<EventData> viewEvent() {
-		List<EventData> aList=new ArrayList();
-		JdbcRowSet jSet=MyrowSet.Myrowset();
-		try {
-			jSet.setCommand("SELECT * FROM events ORDER BY event_date");
-			jSet.execute();
-			for(;jSet.next();)
-			{
-				EventData eData=new EventData();
-				eData.setId(jSet.getInt("id"));
-				eData.setTitle(jSet.getString("title"));
-				eData.setDescription(jSet.getString("description"));
-				eData.setDate(jSet.getString("event_date"));
-				
-				aList.add(eData);
-			}
-			
-		}catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return aList;
-		
+	    List<EventData> aList = new ArrayList<>();
+	    JdbcRowSet jSet = MyrowSet.Myrowset();
+
+	    try {
+
+	        String query = "SELECT * FROM events";
+
+	        if ("upcoming".equals(filter)) {
+	            query += " WHERE event_date >= CURDATE()";
+	        } 
+	        else if ("today".equals(filter)) {
+	            query += " WHERE event_date = CURDATE()";
+	        } 
+	        else if ("past".equals(filter)) {
+	            query += " WHERE event_date < CURDATE()";
+	        }
+
+	        // 🔥 Smart ordering
+	        query += " ORDER BY event_date ASC";
+
+	        jSet.setCommand(query);
+	        jSet.execute();
+
+	        while (jSet.next()) {
+
+	            EventData eData = new EventData();
+	            eData.setId(jSet.getInt("id"));
+	            eData.setTitle(jSet.getString("title"));
+	            eData.setDescription(jSet.getString("description"));
+	            eData.setDate(jSet.getString("event_date"));
+
+	            aList.add(eData);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return aList;
 	}
 
 	@Override
@@ -119,7 +136,7 @@ public class EventDAO implements EventDesign {
 		 JdbcRowSet jRowSet=MyrowSet.Myrowset();
 		 int count=0;
 		try {
-			jRowSet.setCommand("SELECT COUNT(*) FROM events");
+			jRowSet.setCommand("SELECT COUNT(*) FROM events where event_date>=CURRENT_DATE");
 			jRowSet.execute();
 			
 			if(jRowSet.next())

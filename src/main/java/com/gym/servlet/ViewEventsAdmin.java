@@ -19,9 +19,13 @@ public class ViewEventsAdmin extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	String filter = request.getParameter("filter");
 
+    	if (filter == null) {
+    	    filter = "all";
+    	}
     	EventDAO ed=new EventDAO();
-        List<EventData> events = ed.viewEvent();
+        List<EventData> events = ed.viewEvent(filter);
         HttpSession hs = request.getSession(false);
         if (hs != null && hs.getAttribute("userId") != null) {
             UserDAO ud = new UserDAO();

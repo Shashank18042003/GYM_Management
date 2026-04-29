@@ -21,7 +21,7 @@ public class ViewEventsUser extends HttpServlet {
 
         dao.resetNotification();
 
-        List<EventData> events = dao.viewEvent();
+        List<EventData> events = dao.viewEvent("upcoming");
 
         request.setAttribute("events", events);
 

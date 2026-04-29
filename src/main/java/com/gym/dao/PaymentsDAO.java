@@ -105,5 +105,65 @@ public class PaymentsDAO implements PaymentsDesign {
 			payments.add(payment);
 		}
 	}
+	@Override
+	public double getTotalRevenue() {
+	    double total = 0;
+
+	    try (Connection con = Myjdbc.myconn();
+	         PreparedStatement ps = con.prepareStatement(
+	             "SELECT SUM(amount) FROM payments WHERE status='SUCCESS'"
+	         );
+	         ResultSet rs = ps.executeQuery()) {
+
+	        if (rs.next()) {
+	            total = rs.getDouble(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return total;
+	}
+	@Override
+	public double getTodayRevenue() {
+	    double total = 0;
+
+	    try (Connection con = Myjdbc.myconn();
+	         PreparedStatement ps = con.prepareStatement(
+	             "SELECT SUM(amount) FROM payments WHERE DATE(created_at)=CURDATE() AND status='SUCCESS'"
+	         );
+	         ResultSet rs = ps.executeQuery()) {
+
+	        if (rs.next()) {
+	            total = rs.getDouble(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return total;
+	}
+	@Override
+	public int getTotalTransactions() {
+	    int count = 0;
+
+	    try (Connection con = Myjdbc.myconn();
+	         PreparedStatement ps = con.prepareStatement(
+	             "SELECT COUNT(*) FROM payments WHERE status='SUCCESS'"
+	         );
+	         ResultSet rs = ps.executeQuery()) {
+
+	        if (rs.next()) {
+	            count = rs.getInt(1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
 }
 

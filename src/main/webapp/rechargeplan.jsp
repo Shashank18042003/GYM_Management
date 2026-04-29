@@ -20,7 +20,7 @@
     <div class="col-md-4 plan monthly">
         <div class="plan-card">
             <h6>Monthly</h6>
-            <div class="price text-warning">₹1500</div>
+            <div class="price text-warning">₹1499</div>
             <p>30 Days</p>
             <button class="btn btn-warning w-100 buy-btn" onclick="pay('Monthly',1500,30)">Buy</button>
            
@@ -32,7 +32,7 @@
         <div class="plan-card plan-popular">
             <div class="tag">Best Value</div>
             <h6>Quarterly</h6>
-            <div class="price text-primary">₹4000</div>
+            <div class="price text-primary">₹3999</div>
             <p>90 Days</p>
             <button class="btn btn-primary w-100 buy-btn" onclick="pay('Quarterly',4000,90)">Buy</button>
            
@@ -43,7 +43,7 @@
     <div class="col-md-4 plan half">
         <div class="plan-card">
             <h6>Half-Year</h6>
-            <div class="price text-info">₹7500</div>
+            <div class="price text-info">₹7499</div>
             <p>180 Days</p>
             <button class="btn btn-info w-100 buy-btn" onclick="pay('Half-Year',7500,180)">Buy</button>
        
@@ -54,7 +54,7 @@
     <div class="col-md-4 plan annual">
         <div class="plan-card">
             <h6>Annual</h6>
-            <div class="price text-success">₹10000</div>
+            <div class="price text-success">₹9999</div>
             <p>365 Days</p>
             <button class="btn btn-success w-100 buy-btn" onclick="pay('Annual',10000,365)">Buy</button>
             

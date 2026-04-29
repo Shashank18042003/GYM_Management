@@ -66,6 +66,21 @@ public class MembershipDAO implements MembershipDesign {
 			return 0;
 		}
 	}
+	@Override
+	public int expiredcount() {
+		String sql = "SELECT COUNT(DISTINCT m.user_id) FROM membership m "
+				+ "JOIN gym_users u ON u.id = m.user_id "
+				+ "WHERE u.email <> 'admin@gmail.com' "
+				+ "AND m.end_date <= CURRENT_DATE";
+		try (Connection con = Myjdbc.myconn();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			return rs.next() ? rs.getInt(1) : 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
 
 	@Override
 	public Membership getMembershipByEmail(String email) {

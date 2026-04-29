@@ -221,13 +221,13 @@ else if("rechargeplan.jsp".equals(currentPage)) sectionLabel = "Recharge";
     						<i class="bi bi-calendar-event">
     				</i> Check Events
                     </a>
-                    <a class="<%= currentPage.equals("rechargeplan.jsp") ? "gym-active" : "" %>" href="UserDashboard?page=rechargeplan.jsp">Recharge</a>
+                    <a class="<%= currentPage.equals("rechargeplan.jsp") ? "gym-active" : "" %>" href="UserDashboard?page=rechargeplan.jsp">Membership Plans</a>
                 </nav>
 
                 <hr class="my-3 border-light border-opacity-25">
-                <div class="gym-nav">
-                    <a href="Logout">Logout</a>
-                </div>
+               <div class="gym-nav">
+    <a href="#" onclick="confirmLogout(event)">Logout</a>
+</div>
             </aside>
         </div>
 
@@ -311,7 +311,21 @@ function pay(plan, amount, days) {
     .then(res => res.json())
     .then(order => {
 
-        let isHandled = false; // 🔥 prevent duplicate calls
+        console.log("Response:", order); // 🔍 debug
+
+        // 🔥 🔥 ADD THIS BLOCK
+        if (order.status === "ACTIVE") {
+            Swal.fire({
+                icon: 'info',
+                title: 'Already Active',
+                text: order.message,
+                confirmButtonColor: '#3085d6'
+            });
+            return; // ❌ STOP HERE (no Razorpay)
+        }
+
+        // ✅ ONLY RUN THIS IF NOT ACTIVE
+        let isHandled = false;
 
         var options = {
             key: "rzp_test_ShYQR0oAoEClXB",
@@ -321,7 +335,6 @@ function pay(plan, amount, days) {
             description: plan + " Plan",
             order_id: order.id,
 
-            // ✅ SUCCESS
             handler: function (response) {
                 if(isHandled) return;
                 isHandled = true;
@@ -336,13 +349,10 @@ function pay(plan, amount, days) {
 
         var rzp = new Razorpay(options);
 
-        // ❌ FAILED
         rzp.on("payment.failed", function (response) {
 
             if(isHandled) return;
             isHandled = true;
-
-            console.log("FAILED:", response.error);
 
             sendToServer({
                 razorpay_payment_id: "FAILED_" + Date.now(),
@@ -351,7 +361,7 @@ function pay(plan, amount, days) {
             }, plan, amount, days, "FAILED");
         });
 
-        rzp.open();
+        rzp.open(); // ✅ now safe
     });
 }
 
@@ -393,6 +403,25 @@ function sendToServer(res, plan, amount, days, status) {
         	    text: 'Please try again or use another method',
         	    confirmButtonColor: '#d33'
         	});
+        }
+    });
+}
+</script>
+<script>
+function confirmLogout(e) {
+    e.preventDefault(); // stop instant logout
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You will be logged out!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location = "Logout";
         }
     });
 }

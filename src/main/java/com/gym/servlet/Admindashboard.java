@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.gym.dao.EventDAO;
 import com.gym.dao.MembershipDAO;
+import com.gym.dao.PaymentsDAO;
 import com.gym.dao.UserDAO;
 
 import jakarta.servlet.RequestDispatcher;
@@ -30,12 +31,22 @@ public class Admindashboard extends HttpServlet {
         int eventcount=ed.Eventcount();
         MembershipDAO mb = new MembershipDAO();
         int memcount = mb.MemberCount();
+        int expiredcount = mb.expiredcount();
         UserDAO ud = new UserDAO();
         int totalCount = ud.userCount();
+        PaymentsDAO dao = new PaymentsDAO();
+
+        double totalRevenue = dao.getTotalRevenue();
+        double todayRevenue = dao.getTodayRevenue();
+        int totalTransactions = dao.getTotalTransactions();
+        
         hs.setAttribute("totalUsers", totalCount);
         hs.setAttribute("activeMembers", memcount);
         hs.setAttribute("eventsCount", eventcount);
-
+        hs.setAttribute("expiredMembers", expiredcount);
+        hs.setAttribute("totalRevenue", totalRevenue);
+        hs.setAttribute("todayRevenue", todayRevenue);
+        hs.setAttribute("totalTransactions", totalTransactions);
         String page = request.getParameter("page");
         if (page != null && !page.trim().isEmpty()) {
             request.setAttribute("page", page);
