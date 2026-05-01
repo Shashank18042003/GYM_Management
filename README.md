@@ -14,6 +14,7 @@ CREATE TABLE gym_users (
     doj DATE,
     address VARCHAR(255)
 );
+creating admin account --> INSERT INTO gym_users(username, email, password, age, gender, phone,address,weight,height, doj) VALUES ('Admin', 'admin@gmail.com', 'admin123', 25, 'male','6281020126' , 'city', 60, 180, CURDATE());
 
 CREATE TABLE payments (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,3 +35,7 @@ CREATE TABLE membership (
     end_date DATE,
     status VARCHAR(20),FOREIGN KEY (user_id) REFERENCES gym_users(id)
 );
+
+
+event database
+CREATE TABLE events (id INT AUTO_INCREMENT PRIMARY KEY,title VARCHAR(100),description VARCHAR(255),event_date DATE, is_new BOOLEAN DEFAULT TRUE);
